@@ -1,0 +1,398 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 1rem;
+  font-family: "Poppins", sans-serif;
+}
+
+a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+}
+
+select {
+  border: #dbdbdb solid 2px;
+  padding: 15px;
+  border-radius: 10px;
+  background-color: rgba(27, 27, 27, 0.514);
+  color: white;
+}
+
+option {
+  background-color: rgba(27, 27, 27);
+  border: none;
+}
+
+/* HEADER */
+
+header {
+  background-color: rgba(27, 27, 27, 0.514);
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  align-items: center;
+}
+
+ul li a {
+  display: block;
+  padding: 10px;
+}
+
+body {
+  background: url("https://acegif.com/wp-content/gifs/starfall-gif-46.gif")
+    #0c0f22;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* FOOTER */
+
+footer {
+  margin-top: 20px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: rgba(27, 27, 27, 0.514);
+  color: white;
+  text-align: center;
+  padding: 15px;
+}
+
+/* LOGIN */
+
+.card-header h1 {
+  text-align: center;
+  font-size: 35px;
+  color: aliceblue;
+  margin-bottom: 15px;
+}
+
+.login {
+  float: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.card-login {
+  padding: 15px 30px 30px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(27, 27, 27, 0.514);
+  border-radius: 10px;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.input-login {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  color: aliceblue;
+}
+
+.input-login input {
+  padding: 15px;
+  border-radius: 10px;
+  background-color: rgba(27, 27, 27, 0.514);
+  color: white;
+  margin-bottom: 10px;
+  border: #dbdbdb solid 2px;
+}
+
+#logar {
+  background-color: rgba(117, 117, 240, 0.514);
+  border: none;
+  margin-bottom: 0;
+  margin-top: 5px;
+  cursor: pointer;
+}
+
+label {
+  color: aliceblue;
+}
+
+/* CADASTRAR */
+
+.cadastrar {
+  margin-bottom: 50px;
+}
+
+.card-cadastrar {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.input-cadastrar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: aliceblue;
+}
+
+.card-content-cadastro {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.card-cadastro-input {
+  margin: 10px;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-cadastro-input-livro {
+  margin: 10px;
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-cadastrar input {
+  border: #dbdbdb solid 2px;
+  padding: 15px;
+  border-radius: 10px;
+  background-color: rgba(27, 27, 27, 0.514);
+  color: white;
+}
+
+select {
+  border: #dbdbdb solid 2px;
+  padding: 15px;
+  border-radius: 10px;
+  background-color: rgba(27, 27, 27, 0.514);
+  color: white;
+}
+
+#cadastrar {
+  width: 520px;
+  background-color: rgba(117, 117, 240, 0.514);
+  border: none;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+
+#cadastrar-livro {
+  width: 350px;
+  background-color: rgba(117, 117, 240, 0.514);
+  border: none;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+
+.card-cadastro-alterar {
+  align-items: center;
+  margin: 10px;
+}
+
+.card-cadastro-alterar a {
+  display: block;
+  width: 490px;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  background-color: rgba(255, 43, 43, 0.514);
+}
+
+/* HOME */
+
+.button-main {
+  display: flex;
+  flex-direction: row;
+  float: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.button {
+  padding: 20px;
+  border: 2px solid #cccccc;
+  background-color: rgba(19, 19, 19, 0.8);
+  text-align: center;
+  border-radius: 10px;
+  width: 100px;
+  height: 100px;
+  margin: 10px;
+}
+
+.button:hover {
+  width: 105px;
+  height: 105px;
+  transition: 0.5s ease-out;
+}
+
+/* BARRA DE ROLAGEM */
+
+body::-webkit-scrollbar {
+  width: 15px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: rgba(19, 19, 19, 0.8);
+  border-radius: 30px;
+  border: rgba(117, 117, 240, 0.514) solid 2px;
+}
+
+/* LISTAR */
+
+.card-content-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.search-content {
+  display: flex;
+  flex-direction: row;
+  margin-left: 10px;
+}
+
+.search-content input {
+  border: #dbdbdb solid 2px;
+  padding: 15px;
+  border-radius: 10px;
+  background-color: rgba(27, 27, 27, 0.514);
+  color: white;
+}
+
+.card-cadastro-list {
+  display: flex;
+  flex-direction: row;
+}
+
+.search-area button {
+  width: 60px;
+  border: rgba(117, 117, 240, 0.514) solid 2px;
+  padding: 15px;
+  border-radius: 10px;
+  background-color: rgba(117, 117, 240, 0.514);
+  color: white;
+  margin-left: 3px;
+}
+
+/* TABELAS */
+
+table {
+  border-collapse: collapse;
+  border: none;
+  width: 900px;
+  color: white;
+  background-color: rgba(27, 27, 27, 0.514);
+  border-style: none;
+  border-radius: 10px;
+}
+
+#tableautor {
+  border-collapse: collapse;
+  border: none;
+  width: 455px;
+  color: white;
+  background-color: rgba(27, 27, 27, 0.514);
+  border-style: none;
+  border-radius: 10px;
+}
+
+th {
+  text-align: center;
+  border: none;
+  padding: 5px;
+  font-size: 18px;
+  background-color: rgba(5, 5, 5, 0.514);
+}
+
+#table {
+  text-align: center;
+}
+
+TD {
+  border: none;
+  padding: 20px;
+  text-align: center;
+}
+
+TD a {
+  background-color: rgba(117, 117, 240, 0.514);
+  margin: 5px;
+  padding: 5px;
+  text-align: center;
+  border-radius: 5px;
+}
+
+/* EMPRESTIMO */
+
+#botaolistemprestimo {
+  display: flex;
+  flex-direction: row;
+}
+
+.card-cadastro-input-emprestimo {
+  margin: 10px;
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+}
+
+.cadastrar-emprestimo input {
+  width: 500px;
+  background-color: rgba(117, 117, 240, 0.514);
+  border: none;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+
+/* NAVEGAÇÃO */
+.pagina {
+  text-align: center;
+}
+
+.pagina span {
+  color: white;
+}
+
+.page-nav a {
+  text-align: center;
+  margin: 5px;
+}
+
+.errorlist {
+  margin: 5px;
+  font-weight: bolder;
+  text-align: center;
+  color: rgb(255, 124, 124);
+}
+
+::-webkit-calendar-picker-indicator {
+  background-color: azure;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+select {
+  cursor: pointer;
+}
+
+.card-cadastro-input-emprestimo select option {
+  color: aliceblue;
+}

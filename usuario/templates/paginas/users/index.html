@@ -1,0 +1,39 @@
+{% extends "template_main.html" %}
+
+{% load static %}
+
+{% block nome_pagina %}
+    <title>Usuários</title>
+{% endblock %}
+
+{% block btn_voltar_pagina %}
+    <div class="label_menu_left">
+        {% comment %} <a href="{% url 'index' %}">Voltar</a> {% endcomment %}
+    </div>
+{% endblock %}
+
+{% block btn_sair %}
+    <div class="right">
+        <a href="{% url 'users-logout' %}">Sair</a>
+    </div>
+{% endblock %}
+
+{% block menus %}
+    <div class="button-main">
+        <div class="button">
+            <a href="{% url 'users-cadastrar' %}"Cadastrar Usuário">
+                <img src="{% static 'img/cadastrar.png' %}" alt="Cadastrar Usuário" width="64" height="64">
+                <br>
+                <p>Cadastrar<br>Usuário</p>
+            </a>
+        </div>
+
+        <div class="button">
+            <a href="{% url 'users-listar' %}" title="Listar Usuários">
+                <img src="{% static 'img/listar.png' %}" alt="Listar Usuários" width="64" height="64">
+                <br>
+                <p>Listar<br>Usuários</p>
+            </a>
+        </div>
+    </div>
+{% endblock %}
