@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class DeteccaoConfig(AppConfig):
+class DiscrepanciaConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'deteccao'
+    name = 'discrepancia'
