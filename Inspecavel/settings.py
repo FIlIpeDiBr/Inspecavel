@@ -39,8 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'usuario',
     'inspecao',
-    'inspetor',
-    'discrepancia'
+    'discrepancia',
+    'discrepancia_filtrada',
 ]
 
 MIDDLEWARE = [

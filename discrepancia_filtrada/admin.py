@@ -1,3 +1,5 @@
 from django.contrib import admin
+from discrepancia_filtrada.models import Discrepancia_filtrada
 
-# Register your models here.
+
+admin.site.register(Discrepancia_filtrada)
