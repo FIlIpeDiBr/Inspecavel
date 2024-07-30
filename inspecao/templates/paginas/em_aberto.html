@@ -1,0 +1,38 @@
+{% extends "paginas/lista_inspecoes.html" %}
+
+{% block nome_pagina%}
+    Inspeções em Aberto
+{%endblock%}
+
+{% block lista_moderador%}
+    {% if is_empty%}
+    <h1>Nada para ver aqui ainda.</h1>
+    {% else %}
+        {% for inspecao in inspecoes %}
+        <tr>
+            <th scope="row">{{inspecao.titulo}}</th>
+            <td>{{inspecao.artefato}}</td>
+            <td>{{inspecao.limit_date}}</td>
+            <td>Estágio:{{inspecao.status}}</td>
+        </tr>
+        {% endfor %}
+    {% endif %}
+{%endblock%}
+
+
+{% block criacao %}Data Limite{% endblock %}
+
+{% block lista_inspetor %}
+    {% if insp_is_empty %}
+        <h1>Nada para ver aqui. Circulando.</h1>
+    {% else %}
+        {% for inspecao in inspecoes %}
+        <tr>
+            <th scope="row">{{inspecao.titulo}}</th>
+            <td>{{inspecao.artefato}}</td>
+            <td>{{inspecao.limit_date}}</td>
+            <td>Estágio:{{inspecao.collection_status}}</td>
+        </tr>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
