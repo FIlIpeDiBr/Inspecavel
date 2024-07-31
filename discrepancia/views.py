@@ -6,3 +6,7 @@ from django.urls import reverse_lazy
 class colecao_inspetor(LoginRequiredMixin, TemplateView):
     login_url = reverse_lazy('users-login')
     template_name = 'colecao_inspetor.html'
+
+class colecao_monitor(LoginRequiredMixin, TemplateView):
+    login_url = reverse_lazy('users-login')
+    template_name = 'colecao_monitor.html'

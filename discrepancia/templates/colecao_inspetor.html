@@ -1,14 +1,22 @@
 {% extends "template_main.html" %}
 
+{% block nome_pagina %}
+Coleção - Inspetor
+{% endblock %}
+
 {% block conteudo %}
 <div class="d-flex justify-content-center mt-4 mx-2">
-    <div class="p-1 bg-black rounded "  style="width: 30%;">
-        <div class="d-flex flex-column flex-shrink-0 p-3 bg-light rounded" style="height: 100%">
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item list-group-item-action">Testando</li>
-                <li class="list-group-item list-group-item-action">Testando</li>
-                <li class="list-group-item list-group-item-action">Testando</li>
+    <div class="p-1 bg-black rounded "  style="width: 30%; height: 85vh;">
+        <div class="d-flex flex-column flex-shrink-0 p-3 bg-light rounded" style="height: 100%;">
+            <ul class="list-group list-group-flush" style="height: 69vh;">
+                {% for discrepancia in discrepancias %}
+                    <li class="list-group-item list-group-item-action">{{discrepancia}}</li>
+                {% endfor %}
             </ul>
+            <div class="d-flex align-items-center justify-content-around border-top border-dark pt-3" style="height: 10vh;">
+                <button class="btn btn-primary">Nova Discrepancia</button>
+                <button class="btn btn-success">Submeter Inspeção</button>
+            </div>
         </div>
     </div>
     <div class="px-2" style="width: 65%;">
@@ -17,7 +25,7 @@
                 {{titulo_inspecao}} - Discrepancia {{num_discrepancia}}
             </h3>
         </div>
-        <form class="form-group">
+        <form class="form-group p-3">
             <label for="loc_geral" class="col-12">Localização:</label>
             <span class="btn">{{nome_geral}}Página</span>
             <input type="{{formato_geral}}" class="btn btn-light border-dark col-1" name="loc_geral">
@@ -26,11 +34,11 @@
             <span class="btn">a</span>
             <input type="{{formato_especifico}}" class="btn btn-light border-dark col-1" name="loc_especifico_fin">
 
-            <label for="descricao" class="col-12">Descrição:</label>
-            <input type"text" class="form-control" name="descricao">
+            <label for="descricao" class="col-12 mt-3">Descrição:</label>
+            <input type"text" class="form-control border border-dark" name="descricao">
 
-            <label class="col-12 mr-sm-2" for="tipo">Tipo:</label>
-            <select class="form-control custom-select mr-sm-2" name="tipo">
+            <label class="col-12 mr-sm-2 mt-3" for="tipo">Tipo:</label>
+            <select class="form-control custom-select mr-sm-2 border border-dark" name="tipo">
                 {% for tipo in tipos %}
                     <option value="{{tipo}}">{{tipo}}</option>
                 {% endfor %}
@@ -43,4 +51,5 @@
         </form>
     </div>
 </div>
+
 {% endblock %}
