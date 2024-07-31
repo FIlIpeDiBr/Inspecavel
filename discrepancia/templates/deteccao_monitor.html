@@ -1,0 +1,90 @@
+{% extends "template_main.html" %}
+
+{% block nome_pagina %}
+Detecção - Monitor
+{% endblock %}
+
+{% block conteudo %}
+<div class="bg-secondary text-white border border-dark rounded text-center titulo_disc pt-1 mt-2 mb-1 mx-3">
+    <h3>
+        {{titulo_inspecao}} - Coleção
+    </h3>
+</div>
+<div class="d-flex justify-content-center">
+    <div class="p-1 bg-black rounded "  style="width: 40%; height: 80vh;">
+        <div class="d-flex flex-column p-3 bg-light rounded" style="height: 100%;">
+            <table class="table table-hover table-striped text-center">
+                <thead class="border-bottom border-dark m-2">
+                    <th scope="col">Inspetor</th>
+                    <th scope="col">Discrepâncias</th>
+                    <th scope="col">Status</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>Aaaaaa</th>
+                        <td>0</td>
+                        <td><img class="bg-danger" style="margin-top: -5px;"  width="25" height="25"></td>
+                    </tr>
+                    <tr>
+                        <th>Bbbbbbbbb</th>
+                        <td>18</td>
+                        <td><img class="bg-warning" style="margin-top: -5px;"  width="25" height="25"></td>
+                    </tr>
+                    <tr>
+                        <th>Cccc</th>
+                        <td>22</td>
+                        <td><img class="bg-success" style="margin-top: -5px;"  width="25" height="25"></td>
+                    </tr>
+                    {% for inspetor in inspetores %}
+                    <tr>
+                        <th scope="row">{{inspetor.nome}}</th>
+                        <td>{{inspetor.discrepancias}}</td>
+                        <td>
+                            {% comment %} {% if inspetor.status = "0" %}
+                            <img src="{% static 'img/-.png' %}" alt="Em espera" width="25" height="25">
+
+                            {% elif inspetor.status = "1" %}
+                            <img src="{% static 'img/visto.png' %}" alt="Concluído" width="25" height="25">
+
+                            {% elif inspetor.status = "2" %}
+                            <img src="{% static 'img/exclamacao.png' %}" alt="Não concluído" width="25" height="25">
+                            {% endif %} {% endcomment %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="mt-auto d-flex align-items-center justify-content-around border-top border-dark pt-3">
+                <b>Total</b>
+                <span>{{soma_discrepancias}}</span>
+                <span>{{inspetores_concluidos}}/{{inspetores_totais}}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="px-2 d-flex flex-column px-5" style="width: 57%;">
+        <div class="flex-row text-justify mt-4 mb-5">
+            <b class="">Descrição:</b>
+            <br>
+            <span>{{descricao}}Só pra testar</span>
+        </div>
+        <div class="flex-row text-justify my-auto">
+            <b class="">Artefato:</b>
+            <br>
+            <a href="{{link}}">
+                {{link}}https://www.example.com/placeholder
+            </a>
+        </div>
+        <div class="flex-row text-justify my-auto">
+            <b class="">Prazo Limite:</b>
+            <br>
+            <span>{{data_limite}}06/11/2345</span>
+        </div>
+        <div class="flex-row mt-auto d-flex justify-content-around py-3">
+            <button class="btn btn-danger">Cancelar Inspeção</button>
+            <button class="btn btn-success">Concluir Detecção</button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
