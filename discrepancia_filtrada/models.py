@@ -4,7 +4,7 @@ from discrepancia.models import Discrepancia
 class Discrepancia_filtrada(models.Model):
     principal = models.OneToOneField(Discrepancia, verbose_name='Discrepância principal', on_delete=models.PROTECT)
     repetidas = models.ManyToManyField(Discrepancia, related_name='discrepancias_repetidas')
-    severidade = models.CharField(max_length=50)
+    severidade = models.CharField(max_length=50, null=True, blank=True)
     
     class Meta:
         verbose_name = "Discrepância filtrada"
