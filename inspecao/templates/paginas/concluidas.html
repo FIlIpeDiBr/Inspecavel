@@ -5,33 +5,35 @@
 {%endblock%}
 
 {% block lista_moderador%}
-    {% if mod_is_empty %}
-        <h1>Nada para ver aqui ainda.</h1>
-    {% else %}
-        {% for inspecao in inspecoes %}
+    {% for inspecao in inspecoes_moderador %}
         <tr>
             <th scope="row">{{inspecao.titulo}}</th>
             <td>{{inspecao.artefato}}</td>
             <td>{{inspecao.created_at}}</td>
             <td>Concluída em:{{inspecao.finished_at}}</td>
         </tr>
-        {% endfor %}
-    {% endif %}
+    {% empty %}
+        <tr>
+            <th colspan="4">
+                <h1>Nada para ver aqui ainda.</h1>
+            </th>
+        </tr>
+    {% endfor %}
 {%endblock%}
 
-
-
 {% block lista_inspetor %}
-    {% if insp_is_empty %}
-        <h1>Nada para ver aqui. Circulando.</h1>
-    {% else %}
-        {% for inspecao in inspecoes %}
+    {% for inspecao in inspecoes_inspetor %}
         <tr>
             <th scope="row">{{inspecao.titulo}}</th>
             <td>{{inspecao.artefato}}</td>
             <td>{{inspecao.created_at}}</td>
             <td>Concluída em:{{inspecao.finished_at}}</td>
         </tr>
-        {% endfor %}
-    {% endif %}
+    {% empty %}
+        <tr>
+            <th colspan="4">
+                <h1>Nada para ver aqui. Circulando.</h1>
+            </th>
+        </tr>
+    {% endfor %}
 {% endblock %}
