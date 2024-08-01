@@ -1,4 +1,5 @@
 {% extends "template_main.html" %}
+{%load static%}
 
 {% block conteudo %}
 <div class="pt-3 px-4">
@@ -25,8 +26,8 @@
                 <th scope="col">Título</th>
                 <th scope="col">Inspetor</th>
                 <th scope="col">{% block criacao %}Criação{% endblock %}</th>
-                <th scope="col"><a class="btn btn-dark">\/
-                    {% comment %} <img src="{% static 'img/dropdown-branco.png' %}"> {% endcomment %}
+                <th scope="col"><a class="btn btn-dark">
+                    <img src="{% static 'img/dropdown-branco.png' %}" w>
                 </a></th>
             </tr>
         </thead>
