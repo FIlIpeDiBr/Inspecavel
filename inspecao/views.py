@@ -28,3 +28,5 @@ class concluidas(LoginRequiredMixin, ListView):
 class em_aberto(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('users-login')
     template_name = 'paginas/em_aberto.html'
+    model = Inspecao
+    context_object_name = 'inspecoes'
