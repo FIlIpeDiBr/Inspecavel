@@ -15,9 +15,13 @@ class concluidas(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
 
         inspecao_1 = context['inspecoes'].filter(
-            moderador=self.request.user, discrepancia__discrepancia_filtrada__severidade__isnull=False)
+            moderador=self.request.user,
+            finalizada=True,
+        )
+
         inspecao_2 = context['inspecoes'].filter(
-            inspetores=self.request.user,  discrepancia__discrepancia_filtrada__severidade__isnull=False)
+            inspetores=self.request.user,
+            discrepancia__discrepancia_filtrada__severidade__isnull=False)
         
         context['inspecoes_moderador'] = inspecao_1
         context['inspecoes_inspetor'] = inspecao_2
@@ -30,3 +34,20 @@ class em_aberto(LoginRequiredMixin, ListView):
     template_name = 'paginas/em_aberto.html'
     model = Inspecao
     context_object_name = 'inspecoes'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        inspecao_1 = context['inspecoes'].filter(
+            moderador=self.request.user,
+            finalizada=False,
+        )
+
+        inspecao_2 = context['inspecoes'].filter(
+            inspetores=self.request.user,
+            discrepancia__discrepancia_filtrada__severidade__isnull=True)
+        
+        context['inspecoes_moderador'] = inspecao_1
+        context['inspecoes_inspetor'] = inspecao_2
+
+        return context

@@ -5,34 +5,38 @@
 {%endblock%}
 
 {% block lista_moderador%}
-    {% if is_empty%}
-    <h1>Nada para ver aqui ainda.</h1>
-    {% else %}
-        {% for inspecao in inspecoes %}
+    {% for inspecao in inspecoes_moderador %}
         <tr>
             <th scope="row">{{inspecao.titulo}}</th>
             <td>{{inspecao.artefato}}</td>
             <td>{{inspecao.limit_date}}</td>
             <td>Estágio:{{inspecao.status}}</td>
         </tr>
-        {% endfor %}
-    {% endif %}
+    {% empty %}
+        <tr>
+            <th colspan="4">
+                <h1>Nada para ver aqui ainda.</h1>
+            </th>
+        </tr>
+    {% endfor %}
 {%endblock%}
 
 
 {% block criacao %}Data Limite{% endblock %}
 
 {% block lista_inspetor %}
-    {% if insp_is_empty %}
-        <h1>Nada para ver aqui. Circulando.</h1>
-    {% else %}
-        {% for inspecao in inspecoes %}
+    {% for inspecao in inspecoes_inspetor %}
         <tr>
             <th scope="row">{{inspecao.titulo}}</th>
             <td>{{inspecao.artefato}}</td>
             <td>{{inspecao.limit_date}}</td>
             <td>Estágio:{{inspecao.collection_status}}</td>
         </tr>
-        {% endfor %}
-    {% endif %}
+    {% empty %}
+        <tr>
+            <th colspan="4">
+                <h1>Nada para ver aqui. Circulando.</h1>
+            </th>
+        </tr>
+    {% endfor %}
 {% endblock %}
