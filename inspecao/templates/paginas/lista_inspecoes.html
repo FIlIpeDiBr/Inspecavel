@@ -10,13 +10,15 @@
                 <th scope="col">Título</th>
                 <th scope="col">Moderador</th>
                 <th scope="col">Criação</th>
-                <th scope="col"><a class="btn btn-dark">\/</a></th>
+                <th scope="col"><a class="btn btn-dark">
+                    <img src="{% static 'img/dropdown-branco.png' %}" width="20" height="20">
+                </a></th>
             </tr>
         </thead>
         <tbody>
             {% block lista_moderador%}
 
-            {% endblock %}
+            {% endfor %}
         </tbody>
     </table>
 
@@ -27,7 +29,7 @@
                 <th scope="col">Inspetor</th>
                 <th scope="col">{% block criacao %}Criação{% endblock %}</th>
                 <th scope="col"><a class="btn btn-dark">
-                    <img src="{% static 'img/dropdown-branco.png' %}" w>
+                    <img src="{% static 'img/dropdown-branco.png' %}" width="20" height="20">
                 </a></th>
             </tr>
         </thead>
