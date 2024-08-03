@@ -14,3 +14,7 @@ class deteccao_monitor(LoginRequiredMixin, TemplateView):
 class colecao(LoginRequiredMixin, TemplateView):
     login_url = reverse_lazy('users-login')
     template_name = 'colecao.html'
+
+class discriminacao(LoginRequiredMixin, TemplateView):
+    login_url = reverse_lazy('users-login')
+    template_name = 'discriminacao.html'
