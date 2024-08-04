@@ -7,10 +7,10 @@
 {% block lista_moderador%}
     {% for inspecao in inspecoes_moderador %}
         <tr>
-            <th scope="row">{{inspecao.titulo}}</th>
-            <td>{{inspecao.artefato}}</td>
-            <td>{{inspecao.created_at}}</td>
-            <td>Concluída em:{{inspecao.finished_at}}</td>
+            <th style="max-width: 4vw;" scope="row">{{inspecao.titulo}}</th>
+            <td style="max-width: 4vw;">{{inspecao.artefato}}</td>
+            <td style="max-width: 3vw;">{{inspecao.created_at}}</td>
+            <td style="max-width: 3vw;">Concluída em:{{inspecao.finished_at}}</td>
         </tr>
     {% empty %}
         <tr>
@@ -24,10 +24,10 @@
 {% block lista_inspetor %}
     {% for inspecao in inspecoes_inspetor %}
         <tr>
-            <th scope="row">{{inspecao.titulo}}</th>
-            <td>{{inspecao.artefato}}</td>
-            <td>{{inspecao.created_at}}</td>
-            <td>Concluída em:{{inspecao.finished_at}}</td>
+            <th style="max-width: 4vw;" scope="row">{{inspecao.titulo}}</th>
+            <td style="max-width: 4vw;">{{inspecao.artefato}}</td>
+            <td style="max-width: 3vw;">{{inspecao.created_at}}</td>
+            <td style="max-width: 3vw;">Concluída em:{{inspecao.finished_at}}</td>
         </tr>
     {% empty %}
         <tr>

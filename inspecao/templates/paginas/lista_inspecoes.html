@@ -6,12 +6,14 @@
 
     <table class="table table-sm table-hover table-striped text-center">
         <thead class="table table-dark px-4 content-around">
+            <tr><td colspan=4>Moderador</td></tr>
             <tr class="bg-primary">
-                <th scope="col">Título</th>
-                <th scope="col">Moderador</th>
-                <th scope="col">Criação</th>
-                <th scope="col"><a class="btn btn-dark">
-                    <img src="{% static 'img/dropdown-branco.png' %}" width="20" height="20">
+                <th class="col-3" scope="col">Título</th>
+                <th class="col-3" scope="col">Artefato</th>
+                <th class="col-3" scope="col">Criação</th>
+                <th class="col-3" scope="col"><a class="btn btn-dark">
+                    Estágio
+                    {% comment %} <img src="{% static 'img/dropdown-branco.png' %}" width="20" height="20"> {% endcomment %}
                 </a></th>
             </tr>
         </thead>
@@ -23,13 +25,15 @@
     </table>
 
     <table class="table table-sm table-hover table-striped text-center">
-        <thead class="table table-dark px-4 content-around">
-            <tr class="bg-primary">
-                <th scope="col">Título</th>
-                <th scope="col">Inspetor</th>
-                <th scope="col">{% block criacao %}Criação{% endblock %}</th>
-                <th scope="col"><a class="btn btn-dark">
-                    <img src="{% static 'img/dropdown-branco.png' %}" width="20" height="20">
+        <thead class="table table-dark px-4">
+            <tr><td colspan=4>Inspetor</td></tr>
+            <tr>
+                <th class="col-3" scope="col">Título</th>
+                <th class="col-3" scope="col">Artefato</th>
+                <th class="col-3" scope="col">{% block criacao %}Criação{% endblock %}</th>
+                <th class="col-3" scope="col"><a class="btn btn-dark">
+                    Estágio
+                    {% comment %} <img src="{% static 'img/dropdown-branco.png' %}" width="20" height="20"> {% endcomment %}
                 </a></th>
             </tr>
         </thead>

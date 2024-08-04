@@ -1,10 +1,21 @@
-from django.views.generic import ListView
+from django.views.generic import ListView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 
+from inspecao.forms import InspecaoForm
 from inspecao.models import Inspecao
 
 
+class nova_inspecao(LoginRequiredMixin, CreateView):
+    model = Inspecao
+    form_class = InspecaoForm
+    template_name = 'paginas/nova_inspecao.html'
+    success_url = reverse_lazy('users-login')
+
+    def form_valid(self, form):
+        form.instance.criador = self.request.user
+        return super().form_valid(form)
+    
 class concluidas(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('users-login')
     template_name = 'paginas/concluidas.html'

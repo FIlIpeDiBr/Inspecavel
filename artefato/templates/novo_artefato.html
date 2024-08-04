@@ -1,0 +1,42 @@
+{% extends "template_main.html" %}
+{%load static%}
+
+{% block nome_pagina %}
+Novo Artefato
+{% endblock %}
+
+{% block conteudo %}
+<form method="post" class="p-2">
+    {% csrf_token %}
+    {% comment %} <div class="form-group p-2">
+        <label for="titulo">Título:</label>
+        <input name="titulo" class="form-control"></input>
+    </div>
+    <div class="form-group p-2">
+        <label for="nomenclatura_geral">Nomenclatura Geral:</label>
+        <input name="nomenclatura_geral" class="form-control"></input>
+    </div>
+    <div class="form-group p-2">
+        <input name="formato_geral" type="checkbox" class="form-check-input"></input>
+        <label for="formato_geral" class="form-check-label">A nomenclatura geral permite letras?</label>
+    </div>
+    <div class="form-group p-2">
+        <label for="nomenclatura_especifica">Nomenclatura Específica:</label>
+        <input name="nomenclatura_especifica" class="form-control"></input>
+    </div>
+    <div class="form-group p-2">
+        <input name="formato_especifico" type="checkbox" class="form-check-input"></input>
+        <label for="formato_especifico" class="form-check-label">A nomenclatura específica permite letras?</label>
+    </div>
+    <div class="form-group p-2">
+        <label for="tipos_defeito">Tipos de Defeito:</label>
+        <input name="tipos_defeito" class="form-control"></input>
+    </div>
+    <div class="form-group p-2">
+        <label for="lista_severidade">Lista de Severidade:</label>
+        <input name="lista_severidade" class="form-control"></input>
+    </div> {% endcomment %}
+    {{ form.as_p }}
+    <button class="btn btn-primary border border-dark mx-4" type="submit">Salvar</button>
+</form>
+{% endblock %}

@@ -1,8 +1,7 @@
 {% extends "template_main.html" %}
-{% load static %}
 
 {% block nome_pagina %}
-Coleção
+Coleção - Agrupar
 {% endblock %}
 
 {% block conteudo %}
@@ -12,9 +11,9 @@ Coleção
     </h3>
 </div>
 <div class="d-flex justify-content-center">
-    <div class="d-flex flex-column border border-black rounded-bottom bg-light mx-2" style="width: 67%;">
-        <table class="table table-stripped table-hover text-center">
-            <thead class="table table-dark px-4">
+    <form class="d-flex flex-column border border-black rounded-bottom bg-light mx-2" style="width: 67%;">
+        <table class="text-center">
+            <thead class="content-around px-4 bg-secondary">
                 <tr>
                     <th scope="col">{{nomenclatura_geral}}</th>
                     <th scope="col">{{nomenclatura_geral}}</th>
@@ -25,12 +24,12 @@ Coleção
             </thead>
             <tbody>
                 {% for discrepancia in discrepancias %}
-                <tr>
+                <tr class="border-bottom border-secondary">
                     <td style="max-width: 3vw;" class="text-truncate">{{discrepancia.localizacao_geral}}</td>
                     <td style="max-width: 3vw;" class="text-truncate">{{discrepancia.localizacao_especifica}}</td>
                     <td style="max-width: 6vw;" class="text-truncate">{{discrepancia.descricao}}</td>
                     <td style="max-width: 3vw;" class="text-truncate">{{discrepancia.tipo}}</td>
-                    <td><button class="btn btn-info btn-outline-dark p-0 px-1">Agrupar</button></td>
+                    <td style="max-width: 1vw;"><input type="checkbox" class="row-checkbox"></td>
                 </tr>
 
                 {% empty %}
@@ -42,7 +41,17 @@ Coleção
                 {% endfor %}
             </tbody>
         </table>
-    </div>
+        <div class="mt-auto container justify-content-around rounded-bottom" style="background-color: #F0F0F0;">
+            <div class="row mx-1 border-top border-dark"></div>
+            <div class="row py-2 text-center">
+                <div class="col-1 text-truncate">{{d_principal.localizacao_geral}}</div>
+                <div class="col-1 text-truncate">{{d_principal.localizacao_especifica}}</div>
+                <div class="col-6 text-truncate">{{d_principal.descricao}}</div>
+                <div class="col text-truncate">{{d_principal.tipo}}</div>
+                <div class="col p-0"><button type="submit" class="btn btn-primary m-0">Agrupar</button></div>
+            </div>
+        </div>
+    </form>
 
     <div class="p-1 bg-black rounded "  style="width: 30%; height: 80vh;">
         <div class="d-flex flex-column p-3 bg-light rounded" style="height: 100%;">
@@ -58,4 +67,20 @@ Coleção
     </div>
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.querySelectorAll('.row-checkbox').forEach(checkbox => {
+        console.log(checkbox);
+        checkbox.addEventListener('change', function() {
+            const row = this.closest('tr');
+            if (this.checked) {
+                row.classList.add('marcado');
+            } else {
+                row.classList.remove('marcado');
+            }
+        });
+    });
+</script>
 {% endblock %}
