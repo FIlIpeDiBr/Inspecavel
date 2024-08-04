@@ -5,16 +5,21 @@ from django.urls import reverse_lazy
 from inspecao.forms import InspecaoForm
 from inspecao.models import Inspecao
 
-
 class nova_inspecao(LoginRequiredMixin, CreateView):
     model = Inspecao
     form_class = InspecaoForm
     template_name = 'paginas/nova_inspecao.html'
-    success_url = reverse_lazy('users-login')
+    success_url = reverse_lazy('deteccao_monitor')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
 
     def form_valid(self, form):
-        form.instance.criador = self.request.user
+        form.instance.moderador = self.request.user
         return super().form_valid(form)
+
     
 class concluidas(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('users-login')

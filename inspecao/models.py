@@ -7,7 +7,7 @@ class Inspecao(models.Model):
     titulo = models.CharField("Título", max_length=50, unique=True)
     moderador = models.ForeignKey(User, on_delete=models.PROTECT)
     inspetores = models.ManyToManyField(User, related_name='inspetores')
-    artefato = models.OneToOneField(Artefato, on_delete=models.PROTECT)
+    artefato = models.ForeignKey(Artefato, on_delete=models.PROTECT)
     link = models.URLField()
     data_limite = models.DateTimeField()
     created_at = models.DateTimeField(auto_now=True)
