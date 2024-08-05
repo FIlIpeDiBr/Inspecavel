@@ -6,6 +6,11 @@ from django.urls import reverse_lazy
 class deteccao_inspetor(LoginRequiredMixin, TemplateView):
     login_url = reverse_lazy('users-login')
     template_name = 'deteccao_inspetor.html'
+    success_url = reverse_lazy('users-login')
+
+    def form_valid(self, form):
+        form.instance.criador = self.request.user
+        return super().form_valid(form)
 
 class deteccao_monitor(LoginRequiredMixin, TemplateView):
     login_url = reverse_lazy('users-login')

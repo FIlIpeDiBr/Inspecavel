@@ -27,6 +27,8 @@ Detecção - Inspetor
             </h3>
         </div>
         <form class="form-group p-3">
+            {% csrf_token %}
+            
             <label for="loc_geral" class="col-12">Localização:</label>
             <span class="btn">{{nome_geral}}Página</span>
             <input type="{{formato_geral}}" class="btn btn-light border-dark col-1" name="loc_geral">
