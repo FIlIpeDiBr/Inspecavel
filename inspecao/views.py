@@ -32,18 +32,15 @@ class concluidas(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        inspecao_1 = context['inspecoes'].filter(
+        context['inspecoes_moderador'] = context['inspecoes'].filter(
             moderador=self.request.user,
-            finalizada=True,
+            inspecao_finalizada=True,
         )
 
-        inspecao_2 = context['inspecoes'].filter(
+        context['inspecoes_inspetor'] = context['inspecoes'].filter(
             inspetores=self.request.user,
-            discrepancia__discrepancia_filtrada__severidade__isnull=False)
-        
-        context['inspecoes_moderador'] = inspecao_1
-        context['inspecoes_inspetor'] = inspecao_2
-
+            deteccao_finalizada=True)
+                
         return context
 
 
@@ -56,16 +53,16 @@ class em_aberto(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        inspecao_1 = context['inspecoes'].filter(
+        c_moderador = context['inspecoes'].filter(
             moderador=self.request.user,
-            finalizada=False,
+            inspecao_finalizada=False,
         )
 
-        inspecao_2 = context['inspecoes'].filter(
+        c_inspetor = context['inspecoes'].filter(
             inspetores=self.request.user,
-            discrepancia__discrepancia_filtrada__severidade__isnull=True)
+            deteccao_finalizada=False)
         
-        context['inspecoes_moderador'] = inspecao_1
-        context['inspecoes_inspetor'] = inspecao_2
+        context['inspecoes_moderador'] = c_moderador
+        context['inspecoes_inspetor'] = c_inspetor
 
         return context
