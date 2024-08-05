@@ -8,5 +8,12 @@ class DiscrepanciaForm(forms.ModelForm):
             "descricao",
             "localizacao_geral",
             "localizacao_especifica",
-            "tipo"
+            "tipo",
+            #"fonte",
         ]
+
+    # def __init__(self, *args, **kwargs):
+    #     inspecao_id = kwargs.pop('inspecao', None)
+    #     super().__init__(*args, **kwargs)
+    #     if inspecao_id:
+    #         self.instance.inspecao_id = inspecao_id

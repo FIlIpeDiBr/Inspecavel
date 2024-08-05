@@ -7,7 +7,7 @@ from artefato.views import novo_artefato
 urlpatterns = [
     path('', include('inspecao.urls')),
 
-    path('deteccao/inspetor', deteccao_inspetor.as_view(), name='deteccao_inspetor'),
+    path('deteccao/inspetor/<int:pk>', deteccao_inspetor.as_view(), name='deteccao_inspetor'),
     path('deteccao/monitor/<int:pk>', deteccao_monitor.as_view(), name='deteccao_monitor'),
     path('colecao', colecao.as_view(), name='colecao'),
     path('colecao/agrupar', colecao_agrupar.as_view(), name='colecao_agrupar'),

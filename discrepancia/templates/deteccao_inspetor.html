@@ -7,8 +7,14 @@ Detecção - Inspetor
 {% endblock %}
 
 {% block conteudo %}
-<div class="d-flex justify-content-center mt-4 mx-2">
-    <div class="p-1 bg-black rounded "  style="width: 30%; height: 85vh;">
+<div class="bg-secondary text-white border border-dark rounded col-10 text-center titulo_disc pt-1 mt-3 mx-auto">
+    <h3>
+        {{titulo_inspecao}} - Discrepancia {{num_discrepancia}}
+    </h3>
+</div>
+<div class="d-flex justify-content-center  mx-2">
+    
+    {% comment %} <div class="p-1 bg-black rounded "  style="width: 30%; height: 85vh;">
         <div class="d-flex flex-column flex-shrink-0 p-3 bg-light rounded" style="height: 100%;">
             <ul class="list-group list-group-flush" style="height: 69vh;">
                 {% for discrepancia in discrepancias %}
@@ -20,20 +26,20 @@ Detecção - Inspetor
                 <button class="btn btn-success">Submeter Inspeção</button>
             </div>
         </div>
-    </div>
+    </div> {% endcomment %}
     
     <div class="px-2" style="width: 65%;">
-        <div class="bg-secondary text-white border border-dark rounded col-12 text-center titulo_disc pt-1" style="margin-left: -6px;">
+        {% comment %} <div class="bg-secondary text-white border border-dark rounded col-12 text-center titulo_disc pt-1" style="margin-left: -6px;">
             <h3>
                 {{titulo_inspecao}} - Discrepancia {{num_discrepancia}}
             </h3>
-        </div>
-        <form class="form-group p-3">
+        </div> {% endcomment %}
+        <form method="POST" class="form-group p-3">
             {% csrf_token %}
-            <label for="loc_geral" class="col-12">Localização:</label>
-            <span class="btn">{{nome_geral}}:</span>
+            <label for="loc_geral" class="">Localização:</label><br>
+            <span class="btn">{{nomenclatura_geral}}:</span>
             {{ form.localizacao_geral|add_class:'btn btn-light border-dark col-1' }}
-            <span class="btn">{{nome_especifico}}:</span>
+            <span class="btn">{{localizacao_especifica}}:</span>
             {{ form.localizacao_especifica|add_class:'btn btn-light border-dark col-1' }}
             {% comment %} <span class="btn">a</span>
             <input type="{{formato_especifico}}" class="btn btn-light border-dark col-1" name="loc_especifico_fin"> {% endcomment %}
@@ -48,8 +54,8 @@ Detecção - Inspetor
                 
 
             <div class="d-flex justify-content-center">
-                <button type="submit" class="btn btn-danger border-dark m-3 px-3 py-2">Excluir Discrepância</button>
-                <button type="submit" class="btn btn-primary border-dark m-3 px-3 py-2">Salvar Discrepância</button>
+                {% comment %} <button type="submit" class="btn btn-danger border-dark m-3 px-3 py-2">Excluir Discrepância</button> {% endcomment %}
+                <button type="submit" class="btn btn-primary border-dark m-3 px-3 py-2">Submeter Discrepância</button>
             </div>
         </form>
     </div>

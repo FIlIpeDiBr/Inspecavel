@@ -10,7 +10,7 @@
             <th style="max-width: 4vw;" scope="row">{{inspecao.titulo}}</th>
             <td style="max-width: 4vw;">{{inspecao.artefato}}</td>
             <td style="max-width: 3vw;">{{inspecao.limit_date}}</td>
-            <td style="max-width: 3vw;"><a class="btn p-0">Estágio: {{inspecao.status}}</a></td>
+            <td style="max-width: 3vw;"><a href="{% url "deteccao_monitor" inspecao.pk %}" class="btn p-0">Estágio: {{inspecao.status}}</a></td>
         </tr>
     {% empty %}
         <tr>
@@ -30,7 +30,7 @@
         <th style="max-width: 4vw;" scope="row">{{inspecao.titulo}}</th>
         <td style="max-width: 4vw;">{{inspecao.artefato}}</td>
         <td style="max-width: 3vw;">{{inspecao.limit_date}}</td>
-        <td style="max-width: 3vw;"><a class="btn p-0">Estágio: {{inspecao.collection_status}}</a></td>
+        <td style="max-width: 3vw;"><a href="{% url "deteccao_inspetor" inspecao.pk %}" class="btn p-0">Estágio: {{inspecao.collection_status}}</a></td>
     </tr>
     {% empty %}
         <tr>
