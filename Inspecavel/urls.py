@@ -9,9 +9,9 @@ urlpatterns = [
 
     path('deteccao/inspetor/<int:pk>', deteccao_inspetor.as_view(), name='deteccao_inspetor'),
     path('deteccao/monitor/<int:pk>', deteccao_monitor.as_view(), name='deteccao_monitor'),
-    path('colecao', colecao.as_view(), name='colecao'),
+    path('colecao/<int:pk>', colecao.as_view(), name='colecao'),
     path('colecao/agrupar/<int:pk>', colecao_agrupar.as_view(), name='colecao_agrupar'),
-    path('discriminacao', discriminacao.as_view(), name='discriminacao'),
+    path('discriminacao/<int:pk>', discriminacao.as_view(), name='discriminacao'),
     path('exportar/', exportar_dados, name="exportar"),
 
     path('novo/artefato', novo_artefato.as_view(), name="novo_artefato"),
