@@ -6,53 +6,53 @@ Discriminação
 {% endblock %}
 
 {% block conteudo %}
-<div class="container-fluid p-1 px-3">
-    <div class="row bg-secondary text-white border border-dark rounded text-center pt-1">
-        <h3>
-            {{titulo_inspecao}} - Discriminação
-        </h3>
+<form method="post">
+    {% csrf_token %}
+    <div class="container-fluid p-1 px-3">
+        <div class="row bg-secondary text-white border border-dark rounded text-center pt-1">
+            <h3>
+                {{titulo_inspecao}} - Discriminação
+            </h3>
+        </div>
+        <div class="row p-1 m-1">
+            <table class="table table-sm table-hover table-striped text-center">
+                <thead class="table table-dark px-4 content-around">
+                    <tr>
+                        <th scope="col">Descrição</th>
+                        <!-- <th scope="col">Tipo</th> -->
+                        <th scope="col">Severidade</th>
+                        <!-- <th scope="col">Discr. Associadas</th> -->
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for discrepancia, form in formsets %}
+                    <tr>
+                        <td>{{discrepancia.descricao}}</td>
+                        <td>
+                            {{ form.severidade.label_tag }}
+                            {{ form.severidade }}
+                        </td>
+                        <!-- <td>{{discrepancia.severidade}}</td>
+                        <td>{{discrepancia.associadas}}</td> -->
+                        <td></td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <th colspan="5">
+                            <h3>Nada para ver aqui ainda.</h3>
+                        </th>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-    <div class="row p-1 m-1">
-        <table class="table table-sm table-hover table-striped text-center">
-            <thead class="table table-dark px-4 content-around">
-                <tr>
-                    <th scope="col">Descrição</th>
-                    <th scope="col">Tipo</th>
-                    <th scope="col">Severidade</th>
-                    <th scope="col">Discr. Associadas</th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for discrepancia in discrepancias_filtradas %}
-                <tr>
-                    <td>{{discrepancia.descricao}}</td>
-                    <td>
-                        <select class="form-control custom-select mr-sm-2 border border-dark" name="tipo">
-                            {% for tipo in tipos %}
-                                <option value="{{tipo}}">{{tipo}}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                    <td>{{discrepancia.severidade}}</td>
-                    <td>{{discrepancia.associadas}}</td>
-                    <td></td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <th colspan="5">
-                        <h3>Nada para ver aqui ainda.</h3>
-                    </th>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <div class="fixed-bottom border-top border-black d-flex align-items-center justify-content-around mx-2 p-2" style="height: 10vh;">
+        <a class="btn btn-danger">Cancelar Inspeção</a>
+        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+        <a class="btn btn-success">Concluir Inspeção</a>
+        <a href="{% url 'exportar' %}" class="btn btn-success">Exportar</a>
     </div>
-</div>
-<div class="fixed-bottom border-top border-black d-flex align-items-center justify-content-around mx-2 p-2" style="height: 10vh;">
-    <a class="btn btn-danger">Cancelar Inspeção</a>
-    <a class="btn btn-primary">Salvar Alterações</a>
-    <a class="btn btn-success">Concluir Inspeção</a>
-    <a href="{% url 'exportar' %}" class="btn btn-success">Exportar</a>
-</div>
+</form>
 {% endblock %}

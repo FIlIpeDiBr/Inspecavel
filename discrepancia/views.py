@@ -1,6 +1,8 @@
 import io
 from django.http import FileResponse
-from django.views.generic import TemplateView, ListView, CreateView, ListView, DetailView
+from django.shortcuts import get_object_or_404, render, redirect
+from django.views.generic import View, TemplateView, ListView, CreateView, ListView, DetailView
+from django.views.generic.edit import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
@@ -21,6 +23,7 @@ from discrepancia_filtrada.models import Discrepancia_filtrada
 from artefato.models import Artefato
 from discrepancia_filtrada.models import Discrepancia_filtrada
 from artefato.models import Artefato
+from discrepancia.forms import DiscrepanciaFiltradaInlineForm
 
 
 class deteccao_inspetor(LoginRequiredMixin, CreateView):
@@ -28,6 +31,12 @@ class deteccao_inspetor(LoginRequiredMixin, CreateView):
     template_name = 'deteccao_inspetor.html'
     form_class = DiscrepanciaForm
     model = Discrepancia
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        artefato_id = Inspecao.objects.get(pk=self.kwargs['pk']).artefato.id
+        kwargs['artefato_id'] = artefato_id
+        return kwargs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -172,9 +181,54 @@ class colecao_agrupar(LoginRequiredMixin, CreateView):
         return super().form_invalid(form)
 
 
-class discriminacao(LoginRequiredMixin, TemplateView):
+class discriminacao(LoginRequiredMixin, View):
     login_url = reverse_lazy('users-login')
     template_name = 'discriminacao.html'
+    success_url = reverse_lazy('colecao')  # Redirecione para onde você desejar após o sucesso
+
+    def get(self, request, *args, **kwargs):
+        return self.render_formsets(request)
+
+    def post(self, request, *args, **kwargs):
+        discrepancias = Discrepancia.objects.all()
+        all_forms_valid = True
+
+        for discrepancia in discrepancias:
+            artefato_id = discrepancia.fonte.artefato.id if discrepancia.fonte else None
+            form = DiscrepanciaFiltradaInlineForm(
+                request.POST, 
+                instance=Discrepancia_filtrada.objects.get(principal=discrepancia),
+                artefato_id=artefato_id,
+                prefix=f'discrepancia_{discrepancia.id}'
+            )
+            if form.is_valid():
+                form.save()
+            else:
+                all_forms_valid = False
+
+        if all_forms_valid:
+            return self.render_formsets(request)
+        else:
+            return self.render_formsets(request, request.POST)
+
+    def render_formsets(self, request, post_data=None):
+        discrepancias = Discrepancia.objects.all()
+        formsets = []
+
+        for discrepancia in discrepancias:
+            filtrada, created = Discrepancia_filtrada.objects.get_or_create(
+                principal=discrepancia
+            )
+            artefato_id = discrepancia.fonte.artefato.id if discrepancia.fonte else None
+            form = DiscrepanciaFiltradaInlineForm(
+                post_data, 
+                instance=filtrada, 
+                artefato_id=artefato_id,
+                prefix=f'discrepancia_{discrepancia.id}'
+            )
+            formsets.append((discrepancia, form))
+
+        return render(request, self.template_name, {'formsets': formsets})
 
 
 @login_required
