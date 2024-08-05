@@ -69,9 +69,7 @@ class deteccao_monitor(LoginRequiredMixin, ListView):
         inspecao_id = self.kwargs['pk']
         inspecao = get_object_or_404(Inspecao, id=inspecao_id)
         query = Discrepancia.objects.filter(fonte=inspecao).values('responsavel__username').annotate(total=Count('id'))
-        
         return query
-    
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -82,6 +80,18 @@ class deteccao_monitor(LoginRequiredMixin, ListView):
         context['inspecao'] = inspecao
         context['soma_discrepancias'] = soma_discrepancias
         return context
+
+    def post(self, request, *args, **kwargs):
+        if 'concluir_deteccao' in request.POST:
+            return self.concluir_deteccao(request)
+        return redirect('concluidas')
+
+    def concluir_deteccao(self, request):
+        inspecao_id = self.kwargs['pk']
+        inspecao = get_object_or_404(Inspecao, id=inspecao_id)
+        inspecao.deteccao_finalizada = True
+        inspecao.save()
+        return redirect('concluidas')
     
 
 class colecao(LoginRequiredMixin, ListView):
@@ -148,13 +158,19 @@ class colecao_agrupar(LoginRequiredMixin, CreateView):
 class discriminacao(LoginRequiredMixin, View):
     login_url = reverse_lazy('users-login')
     template_name = 'discriminacao.html'
-    success_url = reverse_lazy('colecao')  # Redirecione para onde você desejar após o sucesso
+    # success_url = reverse_lazy('colecao')  # Redirecione para onde você desejar após o sucesso
 
     def get(self, request, *args, **kwargs):
         return self.render_formsets(request)
 
     def post(self, request, *args, **kwargs):
-        discrepancias = Discrepancia.objects.all()
+        if 'concluir_inspecao' in request.POST:
+            return self.concluir_inspecao(request)
+        else:
+            return self.salvar_alteracoes(request)
+
+    def salvar_alteracoes(self, request):
+        discrepancias = Discrepancia.objects.filter(fonte=Inspecao.objects.get(pk=self.kwargs['pk']))
         all_forms_valid = True
 
         for discrepancia in discrepancias:
@@ -175,16 +191,18 @@ class discriminacao(LoginRequiredMixin, View):
         else:
             return self.render_formsets(request, request.POST)
 
+    def concluir_inspecao(self, request):
+        inspecao = Inspecao.objects.get(pk=self.kwargs['pk'])
+        inspecao.inspecao_finalizada = True
+        inspecao.save()
+        return redirect('concluidas')  # Redirecione para a URL desejada após concluir a inspeção
+
     def render_formsets(self, request, post_data=None):
-        discrepancias = Discrepancia.objects.filter(
-            fonte=Inspecao.objects.get(pk=self.kwargs['pk'])
-        )
+        discrepancias = Discrepancia.objects.filter(fonte=Inspecao.objects.get(pk=self.kwargs['pk']))
         formsets = []
 
         for discrepancia in discrepancias:
-            filtrada, created = Discrepancia_filtrada.objects.get_or_create(
-                principal=discrepancia
-            )
+            filtrada, created = Discrepancia_filtrada.objects.get_or_create(principal=discrepancia)
             artefato_id = discrepancia.fonte.artefato.id if discrepancia.fonte else None
             form = DiscrepanciaFiltradaInlineForm(
                 post_data, 
@@ -194,7 +212,10 @@ class discriminacao(LoginRequiredMixin, View):
             )
             formsets.append((discrepancia, form))
 
-        return render(request, self.template_name, {'formsets': formsets})
+        inspecao = Inspecao.objects.get(pk=self.kwargs['pk'])
+        titulo_inspecao = inspecao.titulo
+
+        return render(request, self.template_name, {'formsets': formsets, 'titulo_inspecao': titulo_inspecao})
 
 
 @login_required
