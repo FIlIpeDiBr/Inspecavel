@@ -10,7 +10,9 @@
             <th style="max-width: 4vw;" scope="row">{{inspecao.titulo}}</th>
             <td style="max-width: 4vw;">{{inspecao.artefato}}</td>
             <td style="max-width: 3vw;">{{inspecao.created_at}}</td>
-            <td style="max-width: 3vw;">Concluída em:{{inspecao.finished_at}}</td>
+            <td style="max-width: 3vw;">Concluída em:{{inspecao.finished_at}}
+                <a href="{% url 'exportar' inspecao.pk %}">Exportar</a>
+            </td>
         </tr>
     {% empty %}
         <tr>

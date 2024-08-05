@@ -218,8 +218,8 @@ class discriminacao(LoginRequiredMixin, View):
 
 
 @login_required
-def exportar_dados(request):
-    discrepancias = Discrepancia.objects.all()
+def exportar_dados(request, pk):
+    inspec = Inspecao.objects.get(pk=pk)
     buf = io.BytesIO()
     doc = SimpleDocTemplate(buf, pagesize=letter)
 
@@ -237,35 +237,41 @@ def exportar_dados(request):
         fontSize=11
     )
 
+    elements = [Paragraph(f'Título: {inspec.titulo}', style_header)]
+    
+    elements.append(Spacer(1, 20))
+
+    discrepancias = Discrepancia_filtrada.objects.all()
+    
+    data = [['Localiza', 'Descrição', 'Autor', 'Tipo', 'Severidade']]
+
     for discrepancia in discrepancias:
-        data = [[Paragraph(discrepancia.descricao, style_header)], ['Código', 'Atividade', 'CH Realizada', 'AP Máximo']]
-        # aproveitamentos = Aproveitamento.objects.filter(aluno=aluno)
-        # codigos = aproveitamentos.values('categoria__codigo').annotate(total_ch=Sum('ch'))
+        localizacao = discrepancia.principal.localizacao_geral
+        descricao = discrepancia.principal.descricao
+        autor = discrepancia.principal.responsavel
+        tipo = discrepancia.principal.tipo
+        severidade = discrepancia.severidade
+        data.append([
+            localizacao,
+            Paragraph(descricao, style_cels),
+            autor,
+            tipo,
+            severidade
+        ])
 
-        # for codigo in codigos:
-        #     aproveitamento_maximo = (
-        #         Aproveitamento.objects.filter(categoria__codigo=codigo['categoria__codigo']).first().categoria.ap_max)
-        #     descricao = (
-        #         Aproveitamento.objects.filter(
-        #             categoria__codigo=codigo['categoria__codigo']).first().categoria.descricao)
-        #     data.append([codigo["categoria__codigo"],
-        #                  Paragraph(descricao, style_cels),
-        #                  codigo["total_ch"],
-        #                  aproveitamento_maximo])
-        table = LongTable(data, colWidths=[50, '*', 80, 80])
-        elements.append(table)
-        # elements.append(Spacer(1, 20))
+    table = LongTable(data, colWidths=[80, '*', 80, 80, 80])
+    elements.append(table)
+    elements.append(Spacer(1, 20))
 
-        table.setStyle(TableStyle([
-            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-            ('FONTNAME', (0, 0), (-1, 1), 'Helvetica-Bold'),
-            ('FONTSIZE', (0, 1), (-1, -1), 11),
-            ('GRID', (0, 0), (-1, -1), 1, colors.black),
-            ('SPAN', (0, 0), (3, 0)),
-            ('TOPPADDING', (0, 0), (-1, -1), 10),  # Adiciona espaço no topo das células
-            ('BOTTOMPADDING', (0, 0), (-1, -1), 10),
-        ]))
+    table.setStyle(TableStyle([
+    ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+    ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+    ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+    ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+    ('GRID', (0, 0), (-1, -1), 1, colors.black),
+]))
 
     doc.build(elements)
     buf.seek(0)

@@ -12,7 +12,7 @@ urlpatterns = [
     path('colecao/<int:pk>', colecao.as_view(), name='colecao'),
     path('colecao/agrupar/<int:pk>', colecao_agrupar.as_view(), name='colecao_agrupar'),
     path('discriminacao/<int:pk>', discriminacao.as_view(), name='discriminacao'),
-    path('exportar/', exportar_dados, name="exportar"),
+    path('exportar/<int:pk>', exportar_dados, name="exportar"),
 
     path('novo/artefato', novo_artefato.as_view(), name="novo_artefato"),
 
