@@ -35,10 +35,11 @@ Coleção
 
                 {% empty %}
                 <tr>
-                    <th colspan="5">
-                        <h3>Como isso?</h3>
-                    </th>
+                    <td colspan=5>
+                        <h1>Coleção concluída, você será redirecionado para a discriminação em breve</h1>
+                    </td>
                 </tr>
+                <meta http-equiv="refresh" content="5;url={% url 'discriminacao' 1%}">
                 {% endfor %}
             </tbody>
         </table>
