@@ -9,7 +9,6 @@ class nova_inspecao(LoginRequiredMixin, CreateView):
     model = Inspecao
     form_class = InspecaoForm
     template_name = 'paginas/nova_inspecao.html'
-    success_url = reverse_lazy('deteccao_monitor')
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -19,6 +18,9 @@ class nova_inspecao(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.moderador = self.request.user
         return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse_lazy('deteccao_monitor', kwargs={'pk': self.object.pk})
 
     
 class concluidas(LoginRequiredMixin, ListView):

@@ -20,7 +20,7 @@ Detecção - Monitor
                     <th scope="col">Status</th>
                 </thead>
                 <tbody>
-                    <tr>
+                    <!-- <tr>
                         <th>Aaaaaa</th>
                         <td>0</td>
                         <td><img class="bg-danger" style="margin-top: -5px;"  width="25" height="25"></td>
@@ -34,11 +34,11 @@ Detecção - Monitor
                         <th>Cccc</th>
                         <td>22</td>
                         <td><img class="bg-success" style="margin-top: -5px;"  width="25" height="25"></td>
-                    </tr>
-                    {% for inspetor in inspetores %}
+                    </tr> -->
+                    {% for inspetor in inspecao.inspetores.all %}
                     <tr>
-                        <th scope="row">{{inspetor.nome}}</th>
-                        <td>{{inspetor.discrepancias}}</td>
+                        <th scope="row">{{inspetor.first_name}}</th>
+                        <td>{{inspetor.discrepancias}}TOTAL_DISCREPANCIA</td>
                         <td>
                             {% comment %} {% if inspetor.status = "0" %}
                             <img src="{% static 'img/-.png' %}" alt="Em espera" width="25" height="25">
@@ -63,22 +63,22 @@ Detecção - Monitor
     </div>
 
     <div class="px-2 d-flex flex-column px-5" style="width: 57%;">
-        <div class="flex-row text-justify mt-4 mb-5">
+        <!-- <div class="flex-row text-justify mt-4 mb-5">
             <b class="">Descrição:</b>
             <br>
             <span>{{descricao}}Só pra testar</span>
-        </div>
+        </div> -->
         <div class="flex-row text-justify my-auto">
             <b class="">Artefato:</b>
             <br>
             <a href="{{link}}">
-                {{link}}https://www.example.com/placeholder
+                {{inspecao.link}}
             </a>
         </div>
         <div class="flex-row text-justify my-auto">
             <b class="">Prazo Limite:</b>
             <br>
-            <span>{{data_limite}}06/11/2345</span>
+            <span>{{inspecao.data_limite}}</span>
         </div>
         <div class="flex-row mt-auto d-flex justify-content-around py-3">
             <button class="btn btn-danger">Cancelar Inspeção</button>

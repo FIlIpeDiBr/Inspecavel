@@ -9,5 +9,5 @@ class novo_artefato(LoginRequiredMixin, CreateView):
     model = Artefato
     form_class = ArtefatoForm
     template_name = 'novo_artefato.html'
-    success_url = reverse_lazy('users-login')
+    success_url = reverse_lazy('em_aberto')
     

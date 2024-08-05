@@ -1,6 +1,7 @@
 import io
 from django.http import FileResponse
 from django.views.generic import TemplateView, CreateView
+from django.views.generic import TemplateView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
@@ -12,6 +13,8 @@ from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.platypus import Paragraph, TableStyle, LongTable, SimpleDocTemplate, Spacer
+
+from inspecao.models import Inspecao
 
 
 class deteccao_inspetor(LoginRequiredMixin, CreateView):
@@ -25,9 +28,15 @@ class deteccao_inspetor(LoginRequiredMixin, CreateView):
         form.instance.inspetor = self.request.user
         return super().form_valid(form)
 
-class deteccao_monitor(LoginRequiredMixin, TemplateView):
+class deteccao_monitor(LoginRequiredMixin, DetailView):
     login_url = reverse_lazy('users-login')
+    model = Inspecao
     template_name = 'deteccao_monitor.html'
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     # print(context['inspecao'].inspetores.filter())
+    #     return context
 
 class colecao(LoginRequiredMixin, TemplateView):
     login_url = reverse_lazy('users-login')
