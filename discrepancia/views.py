@@ -154,7 +154,6 @@ class colecao_agrupar(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('colecao')
 
 
-
 class discriminacao(LoginRequiredMixin, View):
     login_url = reverse_lazy('users-login')
     template_name = 'discriminacao.html'
