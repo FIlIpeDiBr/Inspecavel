@@ -1,7 +1,9 @@
-{% extends 'template_main.html' %}
+{% extends 'forms_template.html' %}
+
+{% load static %}
 
 {% block nome_pagina %}
-<title>Login</title>
+Login
 {% endblock %}
 
 {% comment %} 
@@ -10,47 +12,6 @@
 {% endblock %}
 {% endcomment %}
 
-{% block btn_sair %}
+{% block navbar %}
 
-{% endblock %}
-
-{% block menus %}
-<section class="login">
-
-    {% if request.user.is_authenticated %}
-    <div class="card-login">
-        <div class="card-header">
-            <h4>Ação não permitida.</h4>
-        </div>
-        <p>Apenas administradores podem realizar a ação.</p>
-    </div>
-    {% else %}
-    <form class="card-login" method="post">
-        {% csrf_token %}
-
-        <div class="card-header">
-            <h1>Login</h1>
-        </div>
-
-        <div class="card-content">
-            <div class="input-login">
-                {{ form.username.label_tag }}
-                {{ form.username }}
-            </div>
-
-            <div class="input-login">
-                {{ form.password.label_tag }}
-                {{ form.password }}
-            </div>
-            <div class="input-login">
-                {{ form.username.errors }}
-                {{ form.password.errors }}
-                <input id="logar" type="submit" value="Entrar" class="submit">
-            </div>
-        </div>
-
-    </form>
-    {% endif %}
-
-</section>
 {% endblock %}
