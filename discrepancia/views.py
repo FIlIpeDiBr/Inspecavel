@@ -1,10 +1,11 @@
 import io
 from django.http import FileResponse
-from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView, ListView, CreateView, ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
+from django.db.models import Count
 
 from discrepancia.forms import DiscrepanciaForm
 from discrepancia.models import Discrepancia
@@ -31,6 +32,7 @@ class deteccao_inspetor(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
+# Mano, desculpa mesmo
         inspecao = Inspecao.objects.filter(pk=self.kwargs['pk']).values('artefato', 'titulo')
         context['localizacao_especifica'] = Artefato.objects.filter(pk = inspecao[0]['artefato']).values('nomeclatura_espcifica').distinct().values()[0]['nomeclatura_espcifica']
         context['nomenclatura_geral'] = Artefato.objects.filter(pk = inspecao[0]['artefato']).values('nomeclatura_geral').distinct().values()[0]['nomeclatura_geral']
@@ -48,15 +50,30 @@ class deteccao_inspetor(LoginRequiredMixin, CreateView):
         form.instance.fonte = get_object_or_404(Inspecao, pk=self.kwargs['pk'])
         return super().form_valid(form)
 
-class deteccao_monitor(LoginRequiredMixin, DetailView):
+class deteccao_monitor(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('users-login')
     model = Inspecao
     template_name = 'deteccao_monitor.html'
+    context_object_name = 'inspetores'
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     # print(context['inspecao'].inspetores.filter())
-    #     return context
+    def get_queryset(self):
+        inspecao_id = self.kwargs['pk']
+        inspecao = get_object_or_404(Inspecao, id=inspecao_id)
+        query = Discrepancia.objects.filter(fonte=inspecao).values('responsavel__username').annotate(total=Count('id'))
+        
+        return query
+    
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        inspecao_id = self.kwargs['pk']
+        inspecao = get_object_or_404(Inspecao, id=inspecao_id)
+        soma_discrepancias = Discrepancia.objects.filter(fonte=inspecao).count()
+        
+        context['inspecao'] = inspecao
+        context['soma_discrepancias'] = soma_discrepancias
+        return context
+    
 
 class colecao(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('users-login')
