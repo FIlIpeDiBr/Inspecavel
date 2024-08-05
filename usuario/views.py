@@ -10,14 +10,14 @@ from .models import User
 
 
 class IndexUserView(LoginRequiredMixin, TemplateView):
-    login_url = reverse_lazy('users-login')
+    login_url = reverse_lazy('em_aberto')
     template_name = 'paginas/users/index.html'
 
 
 class CadastrarUserView(CreateView):
     template_name = 'paginas/users/form.html'
     form_class = UserCreationForm
-    success_url = reverse_lazy('users-listar')
+    success_url = reverse_lazy('em_aberto')
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -28,7 +28,7 @@ class CadastrarUserView(CreateView):
 
 
 class AlterarUserView(LoginRequiredMixin, UpdateView):
-    login_url = reverse_lazy('users-login')
+    login_url = reverse_lazy('em_aberto')
     template_name = 'paginas/users/form.html'
     form_class = UserChangeForm
     model = User

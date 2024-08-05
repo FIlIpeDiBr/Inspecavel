@@ -22,7 +22,7 @@
 </div>
 {% endblock %}
 
-{% block menus %}
+{% block conteudo %}
 <section class="cadastrar">
 
     <form class="card-cadastrar" method="post">
@@ -33,14 +33,14 @@
 
         {% csrf_token %}
 
-        <!-- {{ form }} -->
+        {% comment %} <!-- {{ form }} -->
         <div class="input-cadastrar">
             <div class="card-content-cadastro">
                 <div class="card-cadastro-input">
                     {{ form.first_name.label_tag }}
                     {{ form.first_name }}
                 </div>
-            </div>
+            </div> {% endcomment %}
 
             <div class="card-content-cadastro">
                 <div class="card-cadastro-input">

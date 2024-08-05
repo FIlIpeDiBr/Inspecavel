@@ -30,7 +30,7 @@ Coleção
                     <td style="max-width: 3vw;" class="text-truncate">{{discrepancia.localizacao_especifica}}</td>
                     <td style="max-width: 6vw;" class="text-truncate">{{discrepancia.descricao}}</td>
                     <td style="max-width: 3vw;" class="text-truncate">{{discrepancia.tipo}}</td>
-                    <td><a class="btn btn-info btn-outline-dark p-0 px-1" href="{% url 'colecao_agrupar' discrepancia.pk %}">Agrupar</a></td>
+                    <td><a class="btn btn-info btn-outline-dark p-0 px-1" href="{% url 'colecao_agrupar' inspecao discrepancia.pk %}">Agrupar</a></td>
                 </tr>
 
                 {% empty %}

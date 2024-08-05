@@ -18,9 +18,6 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.platypus import Paragraph, TableStyle, LongTable, SimpleDocTemplate, Spacer
 
 from inspecao.models import Inspecao
-from artefato.models import Artefato
-from discrepancia_filtrada.models import Discrepancia_filtrada
-from artefato.models import Artefato
 from discrepancia_filtrada.models import Discrepancia_filtrada
 from artefato.models import Artefato
 from discrepancia.forms import DiscrepanciaFiltradaInlineForm
@@ -108,6 +105,8 @@ class colecao(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
+        context['inspecao'] = self.kwargs['pk']
+
 # Mano, desculpa mesmo
         inspecao = Inspecao.objects.filter(pk=self.kwargs['pk']).values('artefato', 'titulo')
         context['nomenclatura_especifica'] = Artefato.objects.filter(pk = inspecao[0]['artefato']).values('nomeclatura_espcifica').distinct().values()[0]['nomeclatura_espcifica']
@@ -123,11 +122,13 @@ class colecao_agrupar(LoginRequiredMixin, CreateView):
     model = Discrepancia_filtrada
     template_name = 'colecao_agrupar.html'
     fields = ['repetidas']
-    success_url = reverse_lazy('colecao')
+
+    def get_success_url(self):
+        return reverse_lazy('colecao', kwargs={'insp': self.kwargs.get('insp')})
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        discrepancia_principal = get_object_or_404(Discrepancia, pk=self.kwargs.get('pk'))
+        discrepancia_principal = get_object_or_404(Discrepancia, pk=self.kwargs.get('disc'))
 
         # Filtrar para que a discrepância principal e as já agrupadas não apareçam na lista de repetidas
         form.fields['repetidas'].queryset = Discrepancia.objects.exclude(
