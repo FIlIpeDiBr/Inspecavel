@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 
-from discrepancia.views import deteccao_inspetor, deteccao_monitor, colecao, colecao_agrupar, discriminacao
+from discrepancia.views import deteccao_inspetor, deteccao_monitor, colecao, colecao_agrupar, discriminacao, exportar_dados
 from artefato.views import novo_artefato
 
 urlpatterns = [
@@ -12,6 +12,7 @@ urlpatterns = [
     path('colecao', colecao.as_view(), name='colecao'),
     path('colecao/agrupar', colecao_agrupar.as_view(), name='colecao_agrupar'),
     path('discriminacao', discriminacao.as_view(), name='discriminacao'),
+    path('exportar/', exportar_dados, name="exportar"),
 
     path('novo/artefato', novo_artefato.as_view(), name="novo_artefato"),
 
