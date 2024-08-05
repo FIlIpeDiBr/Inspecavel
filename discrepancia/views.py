@@ -129,13 +129,16 @@ class colecao_agrupar(LoginRequiredMixin, CreateView):
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         discrepancia_principal = get_object_or_404(Discrepancia, pk=self.kwargs.get('disc'))
-
+        discrepancia_ja_agrupadas = Discrepancia_filtrada.objects.all()
+        print(discrepancia_ja_agrupadas.values_list('principal'))
         # Filtrar para que a discrepância principal e as já agrupadas não apareçam na lista de repetidas
         form.fields['repetidas'].queryset = Discrepancia.objects.exclude(
             pk=discrepancia_principal.pk
         ).exclude(
             id__in=Discrepancia_filtrada.objects.values('repetidas')
-        ).filter(fonte=Inspecao.objects.get(pk=self.kwargs['pk']))
+        ).filter(fonte=Inspecao.objects.get(pk=self.kwargs['pk'])).exclude(
+            id__in=discrepancia_ja_agrupadas.values_list('principal')
+        )
 
         return form
 
