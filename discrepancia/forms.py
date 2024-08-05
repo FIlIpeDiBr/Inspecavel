@@ -1,7 +1,7 @@
 from django import forms
 from discrepancia.models import Discrepancia
 
-class DiscrepanciaForm():
+class DiscrepanciaForm(forms.ModelForm):
     class Meta:
         model = Discrepancia
         fields= [

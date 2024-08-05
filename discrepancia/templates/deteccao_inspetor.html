@@ -1,4 +1,6 @@
 {% extends "template_main.html" %}
+{% load custom_filters %}
+
 
 {% block nome_pagina %}
 Detecção - Inspetor
@@ -28,24 +30,22 @@ Detecção - Inspetor
         </div>
         <form class="form-group p-3">
             {% csrf_token %}
-            
             <label for="loc_geral" class="col-12">Localização:</label>
-            <span class="btn">{{nome_geral}}Página</span>
-            <input type="{{formato_geral}}" class="btn btn-light border-dark col-1" name="loc_geral">
-            <span class="btn">{{nome_especifico}}Linha(s)</span>
-            <input type="{{formato_especifico}}" class="btn btn-light border-dark col-1" name="loc_especifico">
-            <span class="btn">a</span>
-            <input type="{{formato_especifico}}" class="btn btn-light border-dark col-1" name="loc_especifico_fin">
+            <span class="btn">{{nome_geral}}:</span>
+            {{ form.localizacao_geral|add_class:'btn btn-light border-dark col-1' }}
+            <span class="btn">{{nome_especifico}}:</span>
+            {{ form.localizacao_especifica|add_class:'btn btn-light border-dark col-1' }}
+            {% comment %} <span class="btn">a</span>
+            <input type="{{formato_especifico}}" class="btn btn-light border-dark col-1" name="loc_especifico_fin"> {% endcomment %}
 
-            <label for="descricao" class="col-12 mt-3">Descrição:</label>
-            <input type"text" class="form-control border border-dark" name="descricao">
+            <div class="form-gorup">
+                {{ form.descricao.label_tag }}
+                {{ form.descricao|add_class:'form-control border border-dark' }}
+            </div>
 
             <label class="col-12 mr-sm-2 mt-3" for="tipo">Tipo:</label>
-            <select class="form-control custom-select mr-sm-2 border border-dark" name="tipo">
-                {% for tipo in tipos %}
-                    <option value="{{tipo}}">{{tipo}}</option>
-                {% endfor %}
-            </select>
+            {{ form.tipo|add_class:'form-control custom-select mr-sm-2 border border-dark' }}
+                
 
             <div class="d-flex justify-content-center">
                 <button type="submit" class="btn btn-danger border-dark m-3 px-3 py-2">Excluir Discrepância</button>

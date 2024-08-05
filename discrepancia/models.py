@@ -8,7 +8,7 @@ class Discrepancia(models.Model):
     fonte = models.ForeignKey(Inspecao, on_delete=models.PROTECT)
     descricao = models.TextField(verbose_name='Descrição', max_length=100)
     localizacao_geral = models.CharField(verbose_name='Localização Geral', max_length=5)
-    localizacao_especifica = models.CharField(verbose_name='Localização Específica', max_length=5)
+    localizacao_especifica = models.CharField(verbose_name='Localização Específica', max_length=13)
     tipo = models.CharField(max_length=30)
 
     class Meta:
