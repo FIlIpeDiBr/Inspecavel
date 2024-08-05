@@ -43,7 +43,7 @@ class deteccao_inspetor(LoginRequiredMixin, CreateView):
 
 # Mano, desculpa mesmo
         inspecao = Inspecao.objects.filter(pk=self.kwargs['pk']).values('artefato', 'titulo')
-        context['localizacao_especifica'] = Artefato.objects.filter(pk = inspecao[0]['artefato']).values('nomeclatura_espcifica').distinct().values()[0]['nomeclatura_espcifica']
+        context['nomenclatura_especifica'] = Artefato.objects.filter(pk = inspecao[0]['artefato']).values('nomeclatura_espcifica').distinct().values()[0]['nomeclatura_espcifica']
         context['nomenclatura_geral'] = Artefato.objects.filter(pk = inspecao[0]['artefato']).values('nomeclatura_geral').distinct().values()[0]['nomeclatura_geral']
         
         context['titulo_inspecao'] = inspecao[0]['titulo']
@@ -98,8 +98,12 @@ class colecao(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context['nomenclatura_geral'] = Artefato.objects.values('nomeclatura_geral').distinct().values()[0]['nomeclatura_geral']
-        context['nomenclatura_especifica'] = Artefato.objects.values('nomeclatura_espcifica').distinct().values()[0]['nomeclatura_espcifica']
+# Mano, desculpa mesmo
+        inspecao = Inspecao.objects.filter(pk=self.kwargs['pk']).values('artefato', 'titulo')
+        context['nomenclatura_especifica'] = Artefato.objects.filter(pk = inspecao[0]['artefato']).values('nomeclatura_espcifica').distinct().values()[0]['nomeclatura_espcifica']
+        context['nomenclatura_geral'] = Artefato.objects.filter(pk = inspecao[0]['artefato']).values('nomeclatura_geral').distinct().values()[0]['nomeclatura_geral']
+        
+        context['titulo_inspecao'] = inspecao[0]['titulo']
 
         return context
 
