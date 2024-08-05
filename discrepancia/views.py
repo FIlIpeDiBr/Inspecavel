@@ -25,10 +25,14 @@ class deteccao_inspetor(LoginRequiredMixin, CreateView):
     model = Discrepancia
 
     def get_context_data(self, **kwargs):
-        id_inspecao = Inspecao.objects.filter(pk=self.kwargs['pk']).values('artefato')[0]['artefato']
         context = super().get_context_data(**kwargs)
-        context['localizacao_especifica'] = Artefato.objects.filter(pk = id_inspecao).values('nomeclatura_espcifica').distinct().values()[0]['nomeclatura_espcifica']
-        context['nomenclatura_geral'] = Artefato.objects.filter(pk = id_inspecao).values('nomeclatura_geral').distinct().values()[0]['nomeclatura_geral']
+
+        inspecao = Inspecao.objects.filter(pk=self.kwargs['pk']).values('artefato', 'titulo')
+        context['localizacao_especifica'] = Artefato.objects.filter(pk = inspecao[0]['artefato']).values('nomeclatura_espcifica').distinct().values()[0]['nomeclatura_espcifica']
+        context['nomenclatura_geral'] = Artefato.objects.filter(pk = inspecao[0]['artefato']).values('nomeclatura_geral').distinct().values()[0]['nomeclatura_geral']
+        
+        context['titulo_inspecao'] = inspecao[0]['titulo']
+
         return context
 
     def get_success_url(self):
