@@ -134,7 +134,7 @@ class colecao_agrupar(LoginRequiredMixin, CreateView):
             pk=discrepancia_principal.pk
         ).exclude(
             id__in=Discrepancia_filtrada.objects.values('repetidas')
-        )
+        ).filter(fonte=Inspecao.objects.get(pk=self.kwargs['pk']))
 
         return form
 
