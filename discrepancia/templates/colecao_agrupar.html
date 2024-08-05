@@ -1,4 +1,5 @@
 {% extends "template_main.html" %}
+{% load widget_tweaks %}
 
 {% block nome_pagina %}
 Coleção - Agrupar
@@ -11,8 +12,9 @@ Coleção - Agrupar
     </h3>
 </div>
 <div class="d-flex justify-content-center">
-    <form class="d-flex flex-column border border-black rounded-bottom bg-light mx-2" style="width: 67%;">
-        <table class="text-center">
+    <form method="post" class="d-flex flex-column border border-black rounded-bottom bg-light mx-2" style="width: 67%;">
+        {% csrf_token %}
+        <table class="text-center" style="height: 100%;">
             <thead class="content-around px-4 bg-secondary">
                 <tr>
                     <th scope="col">{{nomenclatura_geral}}</th>
@@ -35,7 +37,9 @@ Coleção - Agrupar
                 {% empty %}
                 <tr>
                     <th colspan="5">
-                        <h3>Como isso?</h3>
+                        <!-- {{ form }} -->
+                        {% render_field form.repetidas class="form-control h-100" %}
+                        <!-- <h3>Como isso?</h3> -->
                     </th>
                 </tr>
                 {% endfor %}

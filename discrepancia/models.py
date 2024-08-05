@@ -16,4 +16,4 @@ class Discrepancia(models.Model):
         verbose_name_plural = "Discrepâncias"
 
     def __str__(self) -> str:
-        return f'{self.fonte} - {self.tipo} - {self.descricao}'
+        return f'{self.descricao} - {self.tipo}'

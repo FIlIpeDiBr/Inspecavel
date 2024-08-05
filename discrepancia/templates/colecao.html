@@ -17,7 +17,7 @@ Coleção
             <thead class="table table-dark px-4">
                 <tr>
                     <th scope="col">{{nomenclatura_geral}}</th>
-                    <th scope="col">{{nomenclatura_geral}}</th>
+                    <th scope="col">{{nomenclatura_especifica}}</th>
                     <th scope="col">Descrição</th>
                     <th scope="col">Tipo</th>
                     <th scope="col"></th>
@@ -30,7 +30,7 @@ Coleção
                     <td style="max-width: 3vw;" class="text-truncate">{{discrepancia.localizacao_especifica}}</td>
                     <td style="max-width: 6vw;" class="text-truncate">{{discrepancia.descricao}}</td>
                     <td style="max-width: 3vw;" class="text-truncate">{{discrepancia.tipo}}</td>
-                    <td><button class="btn btn-info btn-outline-dark p-0 px-1">Agrupar</button></td>
+                    <td><a class="btn btn-info btn-outline-dark p-0 px-1" href="{% url 'colecao_agrupar' discrepancia.pk %}">Agrupar</a></td>
                 </tr>
 
                 {% empty %}

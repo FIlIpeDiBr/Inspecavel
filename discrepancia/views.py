@@ -1,7 +1,7 @@
 import io
-from django.shortcuts import get_object_or_404
 from django.http import FileResponse
-from django.views.generic import TemplateView, ListView, CreateView, DetailView
+from django.shortcuts import get_object_or_404
+from django.views.generic import TemplateView, ListView, CreateView, ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
@@ -15,6 +15,10 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.platypus import Paragraph, TableStyle, LongTable, SimpleDocTemplate, Spacer
 
 from inspecao.models import Inspecao
+from artefato.models import Artefato
+from discrepancia_filtrada.models import Discrepancia_filtrada
+from artefato.models import Artefato
+from discrepancia_filtrada.models import Discrepancia_filtrada
 from artefato.models import Artefato
 
 
@@ -54,13 +58,102 @@ class deteccao_monitor(LoginRequiredMixin, DetailView):
     #     # print(context['inspecao'].inspetores.filter())
     #     return context
 
-class colecao(LoginRequiredMixin, TemplateView):
+class colecao(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('users-login')
+    model = Discrepancia
+    model = Discrepancia
     template_name = 'colecao.html'
+    context_object_name = 'discrepancias'
 
-class colecao_agrupar(LoginRequiredMixin, TemplateView):
+    def get_queryset(self):
+        # Filtrar para exibir apenas as discrepâncias que não foram agrupadas
+        return Discrepancia.objects.exclude(id__in=Discrepancia_filtrada.objects.values('principal_id')).exclude(id__in=Discrepancia_filtrada.objects.values('repetidas'))
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['nomenclatura_geral'] = Artefato.objects.values('nomeclatura_geral').distinct().values()[0]['nomeclatura_geral']
+        context['nomenclatura_especifica'] = Artefato.objects.values('nomeclatura_espcifica').distinct().values()[0]['nomeclatura_espcifica']
+
+        return context
+
+class colecao_agrupar(LoginRequiredMixin, CreateView):
+    context_object_name = 'discrepancias'
+
+    def get_queryset(self):
+        # Filtrar para exibir apenas as discrepâncias que não foram agrupadas
+        return Discrepancia.objects.exclude(id__in=Discrepancia_filtrada.objects.values('principal_id')).exclude(id__in=Discrepancia_filtrada.objects.values('repetidas'))
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['nomenclatura_geral'] = Artefato.objects.values('nomeclatura_geral').distinct().values()[0]['nomeclatura_geral']
+        context['nomenclatura_especifica'] = Artefato.objects.values('nomeclatura_espcifica').distinct().values()[0]['nomeclatura_espcifica']
+
+        return context
+
+class colecao_agrupar(LoginRequiredMixin, CreateView):
     login_url = reverse_lazy('users-login')
+    model = Discrepancia_filtrada
     template_name = 'colecao_agrupar.html'
+    fields = ['repetidas']
+    success_url = reverse_lazy('colecao')
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        discrepancia_principal = get_object_or_404(Discrepancia, pk=self.kwargs.get('pk'))
+
+        # Filtrar para que a discrepância principal e as já agrupadas não apareçam na lista de repetidas
+        form.fields['repetidas'].queryset = Discrepancia.objects.exclude(
+            pk=discrepancia_principal.pk
+        ).exclude(
+            id__in=Discrepancia_filtrada.objects.values('repetidas')
+        )
+
+        return form
+
+    def form_valid(self, form):
+        discrepancia_principal = get_object_or_404(Discrepancia, pk=self.kwargs.get('pk'))
+        
+        # Atribuir a instância de Discrepancia ao campo principal
+        form.instance.principal = discrepancia_principal
+        
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        print(form.errors)
+        return super().form_invalid(form)
+
+    fields = ['repetidas']
+    success_url = reverse_lazy('colecao')
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        discrepancia_principal = get_object_or_404(Discrepancia, pk=self.kwargs.get('pk'))
+
+        # Filtrar para que a discrepância principal e as já agrupadas não apareçam na lista de repetidas
+        form.fields['repetidas'].queryset = Discrepancia.objects.exclude(
+            pk=discrepancia_principal.pk
+        ).exclude(
+            id__in=Discrepancia_filtrada.objects.values('repetidas')
+        )
+
+        return form
+
+    def form_valid(self, form):
+        discrepancia_principal = get_object_or_404(Discrepancia, pk=self.kwargs.get('pk'))
+        
+        # Atribuir a instância de Discrepancia ao campo principal
+        form.instance.principal = discrepancia_principal
+        
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        print(form.errors)
+        return super().form_invalid(form)
+
 
 class discriminacao(LoginRequiredMixin, TemplateView):
     login_url = reverse_lazy('users-login')

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'discrepancia_filtrada',
     'artefato',
     'formularios',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
