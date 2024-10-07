@@ -11,7 +11,7 @@
             <td style="max-width: 4vw;">{{inspecao.artefato}}</td>
             <td style="max-width: 3vw;">{{inspecao.created_at}}</td>
             <td style="max-width: 3vw;">Concluída em:{{inspecao.finished_at}}
-                <a href="{% url 'exportar' inspecao.pk %}">Exportar</a>
+                <a href="{% url 'exportar' inspecao.pk %}" class="btn btn-outline-dark py-0 px-1">Exportar</a>
             </td>
         </tr>
     {% empty %}

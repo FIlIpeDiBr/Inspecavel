@@ -18,6 +18,13 @@
 </head>
 
 <body>
+  {% if messages %}
+    <script type="text/javascript">
+      {% for message in messages %}
+        alert("{{ message }}");
+      {% endfor %}
+    </script>
+  {% endif %}
     <header>
         {% block navbar %}
         <nav class="navbar navbar-expand-md navbar-dark bg-dark px-4">
@@ -44,8 +51,12 @@
             </ul>
           </div>
             {% if user.is_authenticated %}
-            <form method="POST">
-              <a href="{% url 'users-logout'%}"><img src="{% static 'img/usuario-branco.png' %}" alt="Trulli" width="50" height="50"></a>
+            <p class="text-white my-0">Olá, {{ user.username }}</p>
+            <form method="POST" action="{% url 'users-logout'%}">
+              <button method="submit" class="btn btn-dark ronded">
+                {% csrf_token %}
+                <img src="{% static 'img/logout-branco.png' %}" alt="Trulli" width="" height="30"> 
+              </button>
             </form>
               {% endif %}
         </nav>

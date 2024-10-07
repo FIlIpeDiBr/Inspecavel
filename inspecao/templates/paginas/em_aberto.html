@@ -10,7 +10,17 @@
             <th style="max-width: 4vw;" scope="row">{{inspecao.titulo}}</th>
             <td style="max-width: 4vw;">{{inspecao.artefato}}</td>
             <td style="max-width: 3vw;">{{inspecao.data_limite}}</td>
-            <td style="max-width: 3vw;"><a href="{% url "deteccao_monitor" inspecao.pk %}" class="btn p-0">Aberta{{inspecao.status}}</a></td>
+            <td style="max-width: 3vw;">
+                {% if inspecao.deteccao_finalizada %}
+                    <a href="{% url "colecao" inspecao.pk %}" class="btn btn-outline-dark py-0 px-1">
+                        Coleção
+                    </a>
+                {% else %}
+                    <a href="{% url "deteccao_monitor" inspecao.pk %}" class="btn btn-outline-dark py-0 px-1">
+                        Detecção
+                    </a>
+                {% endif %}
+            </td>
         </tr>
     {% empty %}
         <tr>
@@ -30,7 +40,7 @@
         <th style="max-width: 4vw;" scope="row">{{inspecao.titulo}}</th>
         <td style="max-width: 4vw;">{{inspecao.artefato}}</td>
         <td style="max-width: 3vw;">{{inspecao.data_limite}}</td>
-        <td style="max-width: 3vw;"><a href="{% url "deteccao_inspetor" inspecao.pk %}" class="btn p-0">Aberta{{inspecao.collection_status}}</a></td>
+        <td style="max-width: 3vw;"><a href="{% url "deteccao_inspetor" inspecao.pk %}" class="btn btn-outline-dark py-0 px-1">Aberta{{inspecao.collection_status}}</a></td>
     </tr>
     {% empty %}
         <tr>

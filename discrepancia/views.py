@@ -6,8 +6,9 @@ from django.views.generic.edit import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.db.models import Count
+from django.contrib import messages
 
 from discrepancia.forms import DiscrepanciaForm
 from discrepancia.models import Discrepancia
@@ -28,6 +29,15 @@ class deteccao_inspetor(LoginRequiredMixin, CreateView):
     template_name = 'deteccao_inspetor.html'
     form_class = DiscrepanciaForm
     model = Discrepancia
+
+    def dispatch(self, request, *args, **kwargs):
+        inspecao = Inspecao.objects.get(pk=self.kwargs['pk'])
+
+        if inspecao.deteccao_finalizada:
+            messages.error(request, "Acesso negado. A detecção já foi finalizada.")
+            return redirect(request.META.get('HTTP_REFERER', 'em_aberto'))
+        
+        return super().dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

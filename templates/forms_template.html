@@ -26,8 +26,12 @@
 
     {% endfor %}
 
-    <div class="d-flex justify-content-center">
-        <button class="btn btn-primary border border-dark" type="submit">Salvar</button>
+    <div class="d-flex justify-content-around">
+        <button class="btn btn-primary border border-dark" type="submit">Confirmar</button>
+
+        {% if request.resolver_match.url_name == "users-login" %}
+            <a class="btn btn-success border border-dark" href="{% url "users-cadastrar" %}">Cadastrar-se</a>
+        {% endif %}
     </div>
 </form>
 {% endblock %}
