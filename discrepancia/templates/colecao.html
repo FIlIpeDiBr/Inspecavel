@@ -39,7 +39,7 @@ Coleção
                         <h1>Coleção concluída, você será redirecionado para a discriminação em breve</h1>
                     </td>
                 </tr>
-                <meta http-equiv="refresh" content="0;url={% url 'discriminacao' 1%}">
+                <meta http-equiv="refresh" content="5;url={% url 'discriminacao' inspecao %}">
                 {% endfor %}
             </tbody>
         </table>
@@ -55,6 +55,10 @@ Coleção
                     <li class="list-group-item list-group-item-action"><a>{{disc_filtrada}}</a></li>
                 {% endfor %}
             </ul>
+            <form method="POST"> 
+                {% csrf_token %}
+                <button type="submit" name="cancelar_inspecao" class="btn btn-danger">Cancelar Inspeção</button>
+            </form>
         </div>
     </div>
 </div>

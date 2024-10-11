@@ -25,16 +25,6 @@ Coleção - Agrupar
                 </tr>
             </thead>
             <tbody>
-                {% for discrepancia in discrepancias %}
-                <tr class="border-bottom border-secondary">
-                    <td style="max-width: 3vw;" class="text-truncate">{{discrepancia.localizacao_geral}}</td>
-                    <td style="max-width: 3vw;" class="text-truncate">{{discrepancia.localizacao_especifica}}</td>
-                    <td style="max-width: 6vw;" class="text-truncate">{{discrepancia.descricao}}</td>
-                    <td style="max-width: 3vw;" class="text-truncate">{{discrepancia.tipo}}</td>
-                    <td style="max-width: 1vw;"><input type="checkbox" class="row-checkbox"></td>
-                </tr>
-
-                {% empty %}
                 <tr>
                     <th colspan="5">
                         <!-- {{ form }} -->
@@ -42,7 +32,6 @@ Coleção - Agrupar
                         <!-- <h3>Como isso?</h3> -->
                     </th>
                 </tr>
-                {% endfor %}
             </tbody>
         </table>
         <div class="mt-auto container justify-content-around rounded-bottom" style="background-color: #F0F0F0;">

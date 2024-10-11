@@ -9,6 +9,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 from django.db.models import Count
 from django.contrib import messages
+from django.utils.timezone import now
+
 
 from discrepancia.forms import DiscrepanciaForm
 from discrepancia.models import Discrepancia
@@ -72,6 +74,15 @@ class deteccao_monitor(LoginRequiredMixin, ListView):
     template_name = 'deteccao_monitor.html'
     context_object_name = 'inspetores'
 
+    def dispatch(self, request, *args, **kwargs):
+        inspecao = Inspecao.objects.get(pk=self.kwargs['pk'])
+
+        if inspecao.deteccao_finalizada:
+            messages.error(request, "Acesso negado. A detecção já foi finalizada.")
+            return redirect(request.META.get('HTTP_REFERER', 'em_aberto'))
+        
+        return super().dispatch(request, *args, **kwargs)
+
     def get_queryset(self):
         inspecao_id = self.kwargs['pk']
         inspecao = get_object_or_404(Inspecao, id=inspecao_id)
@@ -91,12 +102,25 @@ class deteccao_monitor(LoginRequiredMixin, ListView):
     def post(self, request, *args, **kwargs):
         if 'concluir_deteccao' in request.POST:
             return self.concluir_deteccao(request)
+        
+        elif 'cancelar_inspecao' in request.POST:
+            return self.cancelar_inspecao(request)
+        
         return redirect('concluidas')
 
     def concluir_deteccao(self, request):
         inspecao_id = self.kwargs['pk']
         inspecao = get_object_or_404(Inspecao, id=inspecao_id)
         inspecao.deteccao_finalizada = True
+        inspecao.save()
+        return redirect('colecao', pk=inspecao_id)
+    
+    def cancelar_inspecao(self, request):
+        inspecao_id = self.kwargs['pk']
+        inspecao = get_object_or_404(Inspecao, id=inspecao_id)
+        inspecao.inspecao_finalizada = True
+        inspecao.inspecao_cancelada = True
+        inspecao.finished_at = now()
         inspecao.save()
         return redirect('concluidas')
     
@@ -107,10 +131,25 @@ class colecao(LoginRequiredMixin, ListView):
     template_name = 'colecao.html'
     context_object_name = 'discrepancias'
 
-    def get_queryset(self):
-        # Filtrar para exibir apenas as discrepâncias que não foram agrupadas
-        return Discrepancia.objects.exclude(id__in=Discrepancia_filtrada.objects.values('principal_id')).exclude(id__in=Discrepancia_filtrada.objects.values('repetidas')).filter(fonte=Inspecao.objects.get(pk=self.kwargs['pk']))
+    def dispatch(self, request, *args, **kwargs):
+        inspecao = Inspecao.objects.get(pk=self.kwargs['pk'])
 
+        if inspecao.inspecao_finalizada:
+            messages.error(request, "Acesso negado. A inspeção já foi finalizada.")
+            return redirect(request.META.get('HTTP_REFERER', 'concluidas'))
+        
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        inspecao_pk = Inspecao.objects.get(pk=self.kwargs['pk'])
+
+        principais = Discrepancia_filtrada.objects.values_list('principal_id', flat=True)
+        repetidas = Discrepancia_filtrada.objects.values_list('repetidas', flat=True)
+        excluir = set(principais) | set(repetidas)
+        
+        lista = Discrepancia.objects.filter(fonte=inspecao_pk).exclude(id__in=excluir)
+
+        return lista
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -125,40 +164,72 @@ class colecao(LoginRequiredMixin, ListView):
         context['titulo_inspecao'] = inspecao[0]['titulo']
 
         return context
+    
+    def post(self, request, *args, **kwargs):
+        if 'cancelar_inspecao' in request.POST:
+            return self.cancelar_inspecao(request)
+        
+        return redirect('concluidas')
+    
+    def cancelar_inspecao(self, request):
+        inspecao_id = self.kwargs['pk']
+        inspecao = get_object_or_404(Inspecao, id=inspecao_id)
+        if not inspecao.inspecao_finalizada:
+            inspecao.inspecao_finalizada = True
+        inspecao.inspecao_cancelada = True
+        inspecao.finished_at = now()
+        inspecao.save()
+        return redirect('concluidas')
 
 
 class colecao_agrupar(LoginRequiredMixin, CreateView):
     login_url = reverse_lazy('users-login')
+    success_url = reverse_lazy('colecao')
     model = Discrepancia_filtrada
     template_name = 'colecao_agrupar.html'
     fields = ['repetidas']
+
+    def dispatch(self, request, *args, **kwargs):
+        inspecao = Inspecao.objects.get(pk=self.kwargs['pk'])
+
+        if inspecao.inspecao_finalizada:
+            messages.error(request, "Acesso negado. A inspeção já foi finalizada.")
+            return redirect(request.META.get('HTTP_REFERER', 'concluidas'))
+        
+        return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         return reverse_lazy('colecao', kwargs={'insp': self.kwargs.get('insp')})
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        discrepancia_principal = get_object_or_404(Discrepancia, pk=self.kwargs.get('disc'))
-        discrepancia_ja_agrupadas = Discrepancia_filtrada.objects.all()
-        print(discrepancia_ja_agrupadas.values_list('principal'))
+        discrepancia_principal = get_object_or_404(Discrepancia, pk=self.kwargs.get('disc')).pk
+        discrepancia_ja_agrupadas = Discrepancia_filtrada.objects.all().values_list('principal')
+        inspecao_pk = Inspecao.objects.get(pk=self.kwargs['pk'])
+
         # Filtrar para que a discrepância principal e as já agrupadas não apareçam na lista de repetidas
-        form.fields['repetidas'].queryset = Discrepancia.objects.exclude(
-            pk=discrepancia_principal.pk
-        ).exclude(
-            id__in=Discrepancia_filtrada.objects.values('repetidas')
-        ).filter(fonte=Inspecao.objects.get(pk=self.kwargs['pk'])).exclude(
-            id__in=discrepancia_ja_agrupadas.values_list('principal')
-        )
+        form.fields['repetidas'].queryset = Discrepancia.objects.filter(fonte=inspecao_pk
+            ).exclude(id__in=[
+                discrepancia_ja_agrupadas,
+                discrepancia_principal])
 
         return form
 
     def form_valid(self, form):
-        discrepancia_principal = get_object_or_404(Discrepancia, pk=self.kwargs.get('pk'))
+        id = get_object_or_404(Discrepancia, pk=self.kwargs.get('pk')).pk
+        discrepancia_principal = get_object_or_404(Discrepancia, pk=self.kwargs.get('disc'))
+        repetidas = form.cleaned_data.get('repetidas')
+        print("++++++++++++++++++++++++++++++++++++", repetidas)
+
         
-        # Atribuir a instância de Discrepancia ao campo principal
-        form.instance.principal = discrepancia_principal
+        discrepancia_filtrada = Discrepancia_filtrada.objects.create(principal=discrepancia_principal)
         
-        return super().form_valid(form)
+        if repetidas:
+            discrepancia_filtrada.repetidas.set(repetidas)
+            print("++++++++++++++++++++++++++++++++++++", discrepancia_filtrada.repetidas)
+
+        
+        return redirect('colecao',pk = id)
     
     def form_invalid(self, form):
         print(form.errors)
@@ -173,12 +244,23 @@ class discriminacao(LoginRequiredMixin, View):
     template_name = 'discriminacao.html'
     # success_url = reverse_lazy('colecao')  # Redirecione para onde você desejar após o sucesso
 
+    def dispatch(self, request, *args, **kwargs):
+        inspecao = Inspecao.objects.get(pk=self.kwargs['pk'])
+
+        if inspecao.inspecao_finalizada:
+            messages.error(request, "Acesso negado. A inspeção já foi finalizada.")
+            return redirect(request.META.get('HTTP_REFERER', 'concluidas'))
+        
+        return super().dispatch(request, *args, **kwargs)
+
     def get(self, request, *args, **kwargs):
         return self.render_formsets(request)
 
     def post(self, request, *args, **kwargs):
         if 'concluir_inspecao' in request.POST:
             return self.concluir_inspecao(request)
+        elif 'cancelar_inspecao' in request.POST:
+            return self.cancelar_inspecao(request)
         else:
             return self.salvar_alteracoes(request)
 
@@ -196,6 +278,7 @@ class discriminacao(LoginRequiredMixin, View):
             )
             if form.is_valid():
                 form.save()
+                print(form)
             else:
                 all_forms_valid = False
 
@@ -209,6 +292,16 @@ class discriminacao(LoginRequiredMixin, View):
         inspecao.inspecao_finalizada = True
         inspecao.save()
         return redirect('concluidas')  # Redirecione para a URL desejada após concluir a inspeção
+    
+    def cancelar_inspecao(self, request):
+        inspecao_id = self.kwargs['pk']
+        inspecao = get_object_or_404(Inspecao, id=inspecao_id)
+        if not inspecao.inspecao_finalizada:
+            inspecao.inspecao_finalizada = True
+        inspecao.inspecao_cancelada = True
+        inspecao.finished_at = now()
+        inspecao.save()
+        return redirect('concluidas')
 
     def render_formsets(self, request, post_data=None):
         discrepancias = Discrepancia.objects.filter(fonte=Inspecao.objects.get(pk=self.kwargs['pk']))

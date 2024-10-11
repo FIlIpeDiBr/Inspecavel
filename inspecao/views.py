@@ -53,16 +53,13 @@ class em_aberto(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        c_moderador = context['inspecoes'].filter(
+        context['inspecoes_moderador'] = context['inspecoes'].filter(
             moderador=self.request.user,
             inspecao_finalizada=False,
         )
 
-        c_inspetor = context['inspecoes'].filter(
+        context['inspecoes_inspetor'] = context['inspecoes'].filter(
             inspetores=self.request.user,
             deteccao_finalizada=False)
-        
-        context['inspecoes_moderador'] = c_moderador
-        context['inspecoes_inspetor'] = c_inspetor
 
         return context

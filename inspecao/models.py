@@ -11,8 +11,10 @@ class Inspecao(models.Model):
     link = models.URLField()
     data_limite = models.DateTimeField()
     created_at = models.DateTimeField(auto_now=True)
+    finished_at = models.DateTimeField(auto_now=False, null=True)
     deteccao_finalizada = models.BooleanField(default=False)
     inspecao_finalizada = models.BooleanField(default=False)
+    inspecao_cancelada = models.BooleanField(default=False)
 
 
     class Meta:

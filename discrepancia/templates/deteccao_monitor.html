@@ -50,7 +50,10 @@ Detecção - Monitor
             <span>{{inspecao.data_limite}}</span>
         </div>
         <div class="flex-row mt-auto d-flex justify-content-around py-3">
-            <button class="btn btn-danger">Cancelar Inspeção</button>
+            <form method="POST"> 
+                {% csrf_token %}
+                <button type="submit" name="cancelar_inspecao" class="btn btn-danger">Cancelar Inspeção</button>
+            </form>
             <form method="POST"> 
                 {% csrf_token %}
                 <button type="submit" name="concluir_deteccao" class="btn btn-success">Concluir Detecção</button>

@@ -49,8 +49,11 @@ Discriminação
         </div>
     </div>
     <div class="fixed-bottom border-top border-black d-flex align-items-center justify-content-around mx-2 p-2" style="height: 10vh;">
-        <a class="btn btn-danger">Cancelar Inspeção</a>
-        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+        <form method="POST"> 
+            {% csrf_token %}
+            <button type="submit" name="cancelar_inspecao" class="btn btn-danger">Cancelar Inspeção</button>
+        </form>
+        <button type="submit" name="salvar_alteracoes" class="btn btn-primary">Salvar Alterações</button>
         <button type="submit" name="concluir_inspecao" class="btn btn-success">Concluir Inspeção</button>
     </div>
 </form>

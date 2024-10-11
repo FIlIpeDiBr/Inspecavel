@@ -14,26 +14,7 @@ Detecção - Inspetor
 </div>
 <div class="d-flex justify-content-center  mx-2">
     
-    {% comment %} <div class="p-1 bg-black rounded "  style="width: 30%; height: 85vh;">
-        <div class="d-flex flex-column flex-shrink-0 p-3 bg-light rounded" style="height: 100%;">
-            <ul class="list-group list-group-flush" style="height: 69vh;">
-                {% for discrepancia in discrepancias %}
-                    <li class="list-group-item list-group-item-action">{{discrepancia}}</li>
-                {% endfor %}
-            </ul>
-            <div class="d-flex align-items-center justify-content-around border-top border-dark pt-3" style="height: 10vh;">
-                <button class="btn btn-primary">Nova Discrepancia</button>
-                <button class="btn btn-success">Submeter Inspeção</button>
-            </div>
-        </div>
-    </div> {% endcomment %}
-    
     <div class="px-2" style="width: 65%;">
-        {% comment %} <div class="bg-secondary text-white border border-dark rounded col-12 text-center titulo_disc pt-1" style="margin-left: -6px;">
-            <h3>
-                {{titulo_inspecao}} - Discrepancia {{num_discrepancia}}
-            </h3>
-        </div> {% endcomment %}
         <form method="POST" class="form-group p-3">
             {% csrf_token %}
             <label for="loc_geral" class="">Localização:</label><br>
@@ -41,9 +22,7 @@ Detecção - Inspetor
             {{ form.localizacao_geral|add_class:'btn btn-light border-dark col-1' }}
             <span class="btn">{{nomenclatura_especifica}}:</span>
             {{ form.localizacao_especifica|add_class:'btn btn-light border-dark col-1' }}
-            {% comment %} <span class="btn">a</span>
-            <input type="{{formato_especifico}}" class="btn btn-light border-dark col-1" name="loc_especifico_fin"> {% endcomment %}
-
+            
             <div class="form-gorup">
                 {{ form.descricao.label_tag }}
                 {{ form.descricao|add_class:'form-control border border-dark' }}
@@ -52,7 +31,6 @@ Detecção - Inspetor
             <label class="col-12 mr-sm-2 mt-3" for="tipo">Tipo:</label>
             {{ form.tipo|add_class:'form-control custom-select mr-sm-2 border border-dark' }}
             <div class="d-flex justify-content-center">
-                {% comment %} <button type="submit" class="btn btn-danger border-dark m-3 px-3 py-2">Excluir Discrepância</button> {% endcomment %}
                 <button type="submit" class="btn btn-primary border-dark m-3 px-3 py-2">Submeter Discrepância</button>
             </div>
         </form>
