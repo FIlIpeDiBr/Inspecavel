@@ -11,7 +11,11 @@
             <td style="max-width: 4vw;">{{inspecao.artefato}}</td>
             <td style="max-width: 3vw;">{{inspecao.data_limite}}</td>
             <td style="max-width: 3vw;">
-                {% if inspecao.deteccao_finalizada %}
+                {% if inspecao.colecao_finalizada %}
+                    <a href="{% url "discriminacao" inspecao.pk %}" class="btn btn-outline-dark py-0 px-1">
+                        Discriminação
+                    </a>
+                {%elif inspecao.deteccao_finalizada%}
                     <a href="{% url "colecao" inspecao.pk %}" class="btn btn-outline-dark py-0 px-1">
                         Coleção
                     </a>

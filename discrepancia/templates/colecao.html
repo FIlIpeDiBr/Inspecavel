@@ -39,7 +39,17 @@ Coleção
                         <h1>Coleção concluída, você será redirecionado para a discriminação em breve</h1>
                     </td>
                 </tr>
-                <meta http-equiv="refresh" content="5;url={% url 'discriminacao' inspecao %}">
+                <form id="auto-submit" action="{% url 'colecao_agrupar' inspecao 0 %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="concluir_colecao">
+                </form>
+
+                <script>
+                    setTimeout(function(){
+                        document.getElementById('auto-submit').submit();
+                    }, 5000);
+                </script>
+
                 {% endfor %}
             </tbody>
         </table>

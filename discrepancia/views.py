@@ -50,12 +50,15 @@ class deteccao_inspetor(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-# Mano, desculpa mesmo
-        inspecao = Inspecao.objects.filter(pk=self.kwargs['pk']).values('artefato', 'titulo')
-        context['nomenclatura_especifica'] = Artefato.objects.filter(pk = inspecao[0]['artefato']).values('nomeclatura_espcifica').distinct().values()[0]['nomeclatura_espcifica']
-        context['nomenclatura_geral'] = Artefato.objects.filter(pk = inspecao[0]['artefato']).values('nomeclatura_geral').distinct().values()[0]['nomeclatura_geral']
+        inspecao = Inspecao.objects.filter(pk=self.kwargs['pk']).values('artefato', 'titulo').first()
+
+        context['nomenclatura_especifica'] = Artefato.objects.filter(pk = inspecao['artefato']
+            ).values('nomeclatura_espcifica').first()['nomeclatura_espcifica']
         
-        context['titulo_inspecao'] = inspecao[0]['titulo']
+        context['nomenclatura_geral'] = Artefato.objects.filter(pk = inspecao['artefato']
+            ).values('nomeclatura_geral').first()['nomeclatura_geral']
+        
+        context['titulo_inspecao'] = inspecao['titulo']
 
         return context
 
@@ -145,23 +148,25 @@ class colecao(LoginRequiredMixin, ListView):
 
         principais = Discrepancia_filtrada.objects.values_list('principal_id', flat=True)
         repetidas = Discrepancia_filtrada.objects.values_list('repetidas', flat=True)
-        excluir = set(principais) | set(repetidas)
         
-        lista = Discrepancia.objects.filter(fonte=inspecao_pk).exclude(id__in=excluir)
+        lista_nao_filtradas = Discrepancia.objects.filter(fonte=inspecao_pk).exclude(id__in=set(principais) | set(repetidas))
 
-        return lista
+        return lista_nao_filtradas
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         context['inspecao'] = self.kwargs['pk']
 
-# Mano, desculpa mesmo
-        inspecao = Inspecao.objects.filter(pk=self.kwargs['pk']).values('artefato', 'titulo')
-        context['nomenclatura_especifica'] = Artefato.objects.filter(pk = inspecao[0]['artefato']).values('nomeclatura_espcifica').distinct().values()[0]['nomeclatura_espcifica']
-        context['nomenclatura_geral'] = Artefato.objects.filter(pk = inspecao[0]['artefato']).values('nomeclatura_geral').distinct().values()[0]['nomeclatura_geral']
+        inspecao = Inspecao.objects.filter(pk=self.kwargs['pk']).values('artefato', 'titulo').first()
+
+        context['nomenclatura_especifica'] = Artefato.objects.filter(pk = inspecao['artefato']
+            ).values('nomeclatura_espcifica').first()['nomeclatura_espcifica']
         
-        context['titulo_inspecao'] = inspecao[0]['titulo']
+        context['nomenclatura_geral'] = Artefato.objects.filter(pk = inspecao['artefato']
+            ).values('nomeclatura_geral').first()['nomeclatura_geral']
+        
+        context['titulo_inspecao'] = inspecao['titulo']
 
         return context
     
@@ -204,14 +209,14 @@ class colecao_agrupar(LoginRequiredMixin, CreateView):
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         discrepancia_principal = get_object_or_404(Discrepancia, pk=self.kwargs.get('disc')).pk
-        discrepancia_ja_agrupadas = Discrepancia_filtrada.objects.all().values_list('principal')
+        discrepancia_ja_agrupadas = list(Discrepancia_filtrada.objects.all().values_list("principal_id", flat=True))
         inspecao_pk = Inspecao.objects.get(pk=self.kwargs['pk'])
+        ja_agrupadas = Discrepancia.objects.filter(fonte=inspecao_pk).values()
+
 
         # Filtrar para que a discrepância principal e as já agrupadas não apareçam na lista de repetidas
         form.fields['repetidas'].queryset = Discrepancia.objects.filter(fonte=inspecao_pk
-            ).exclude(id__in=[
-                discrepancia_ja_agrupadas,
-                discrepancia_principal])
+            ).exclude(id__in=discrepancia_ja_agrupadas + [discrepancia_principal])
 
         return form
 
@@ -234,6 +239,22 @@ class colecao_agrupar(LoginRequiredMixin, CreateView):
     def form_invalid(self, form):
         print(form.errors)
         return super().form_invalid(form)
+    
+
+    def post(self, request, *args, **kwargs):
+        print("postado")
+        if 'concluir_colecao' in request.POST:
+            print("recebido")
+            return self.concluir_colecao(request)
+        
+        return redirect('concluidas')
+
+    def concluir_colecao(self, request):
+        inspecao_id = self.kwargs['pk']
+        inspecao = get_object_or_404(Inspecao, id=inspecao_id)
+        inspecao.colecao_finalizada = True
+        inspecao.save()
+        return redirect('discriminacao', pk=inspecao_id)
 
     fields = ['repetidas']
     success_url = reverse_lazy('colecao')
@@ -288,6 +309,7 @@ class discriminacao(LoginRequiredMixin, View):
             return self.render_formsets(request, request.POST)
 
     def concluir_inspecao(self, request):
+        self.salvar_alteracoes(request)
         inspecao = Inspecao.objects.get(pk=self.kwargs['pk'])
         inspecao.inspecao_finalizada = True
         inspecao.save()

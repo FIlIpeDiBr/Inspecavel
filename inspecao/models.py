@@ -13,6 +13,7 @@ class Inspecao(models.Model):
     created_at = models.DateTimeField(auto_now=True)
     finished_at = models.DateTimeField(auto_now=False, null=True)
     deteccao_finalizada = models.BooleanField(default=False)
+    colecao_finalizada = models.BooleanField(default=False)
     inspecao_finalizada = models.BooleanField(default=False)
     inspecao_cancelada = models.BooleanField(default=False)
 
