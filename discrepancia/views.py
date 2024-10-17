@@ -115,6 +115,7 @@ class deteccao_monitor(LoginRequiredMixin, ListView):
         inspecao_id = self.kwargs['pk']
         inspecao = get_object_or_404(Inspecao, id=inspecao_id)
         inspecao.deteccao_finalizada = True
+        inspecao.finished_at = now()
         inspecao.save()
         return redirect('colecao', pk=inspecao_id)
     
@@ -208,15 +209,15 @@ class colecao_agrupar(LoginRequiredMixin, CreateView):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        discrepancia_principal = get_object_or_404(Discrepancia, pk=self.kwargs.get('disc')).pk
-        discrepancia_ja_agrupadas = list(Discrepancia_filtrada.objects.all().values_list("principal_id", flat=True))
-        inspecao_pk = Inspecao.objects.get(pk=self.kwargs['pk'])
-        ja_agrupadas = Discrepancia.objects.filter(fonte=inspecao_pk).values()
+        id_discrepancia_principal = self.kwargs.get('disc')
+        id_inspecao_fonte = self.kwargs['pk']
 
+        ja_filtradas = Discrepancia_filtrada.objects.filter(principal__fonte=self.kwargs.get('pk')).values_list("repetidas", "principal")
+        lista_excluir = [item for tupla in ja_filtradas for item in tupla] + [id_discrepancia_principal]
 
         # Filtrar para que a discrepância principal e as já agrupadas não apareçam na lista de repetidas
-        form.fields['repetidas'].queryset = Discrepancia.objects.filter(fonte=inspecao_pk
-            ).exclude(id__in=discrepancia_ja_agrupadas + [discrepancia_principal])
+        form.fields['repetidas'].queryset = Discrepancia.objects.filter(fonte=id_inspecao_fonte
+            ).exclude(id__in=lista_excluir)
 
         return form
 
@@ -224,14 +225,12 @@ class colecao_agrupar(LoginRequiredMixin, CreateView):
         id = get_object_or_404(Discrepancia, pk=self.kwargs.get('pk')).pk
         discrepancia_principal = get_object_or_404(Discrepancia, pk=self.kwargs.get('disc'))
         repetidas = form.cleaned_data.get('repetidas')
-        print("++++++++++++++++++++++++++++++++++++", repetidas)
 
         
         discrepancia_filtrada = Discrepancia_filtrada.objects.create(principal=discrepancia_principal)
         
         if repetidas:
             discrepancia_filtrada.repetidas.set(repetidas)
-            print("++++++++++++++++++++++++++++++++++++", discrepancia_filtrada.repetidas)
 
         
         return redirect('colecao',pk = id)
@@ -242,17 +241,21 @@ class colecao_agrupar(LoginRequiredMixin, CreateView):
     
 
     def post(self, request, *args, **kwargs):
-        print("postado")
         if 'concluir_colecao' in request.POST:
-            print("recebido")
             return self.concluir_colecao(request)
         
-        return redirect('concluidas')
+        form = self.get_form()
+    
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
 
     def concluir_colecao(self, request):
         inspecao_id = self.kwargs['pk']
         inspecao = get_object_or_404(Inspecao, id=inspecao_id)
         inspecao.colecao_finalizada = True
+        inspecao.finished_at = now()
         inspecao.save()
         return redirect('discriminacao', pk=inspecao_id)
 
@@ -299,7 +302,6 @@ class discriminacao(LoginRequiredMixin, View):
             )
             if form.is_valid():
                 form.save()
-                print(form)
             else:
                 all_forms_valid = False
 
@@ -312,6 +314,7 @@ class discriminacao(LoginRequiredMixin, View):
         self.salvar_alteracoes(request)
         inspecao = Inspecao.objects.get(pk=self.kwargs['pk'])
         inspecao.inspecao_finalizada = True
+        inspecao.finished_at = now()
         inspecao.save()
         return redirect('concluidas')  # Redirecione para a URL desejada após concluir a inspeção
     
