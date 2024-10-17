@@ -289,15 +289,16 @@ class discriminacao(LoginRequiredMixin, View):
             return self.salvar_alteracoes(request)
 
     def salvar_alteracoes(self, request):
-        discrepancias = Discrepancia.objects.filter(fonte=Inspecao.objects.get(pk=self.kwargs['pk']))
+        id_inspecao = self.kwargs['pk']
+        discrepancias = Discrepancia_filtrada.objects.filter(principal__fonte= id_inspecao)
+        artefato_id = Inspecao.objects.filter(id= id_inspecao).first().id
         all_forms_valid = True
 
         for discrepancia in discrepancias:
-            artefato_id = discrepancia.fonte.artefato.id if discrepancia.fonte else None
             form = DiscrepanciaFiltradaInlineForm(
                 request.POST, 
-                instance=Discrepancia_filtrada.objects.get(principal=discrepancia),
-                artefato_id=artefato_id,
+                instance = discrepancia,
+                artefato_id = artefato_id,
                 prefix=f'discrepancia_{discrepancia.id}'
             )
             if form.is_valid():
@@ -329,19 +330,19 @@ class discriminacao(LoginRequiredMixin, View):
         return redirect('concluidas')
 
     def render_formsets(self, request, post_data=None):
-        discrepancias = Discrepancia.objects.filter(fonte=Inspecao.objects.get(pk=self.kwargs['pk']))
+        id_inspecao = self.kwargs['pk']
+        discrepancias = Discrepancia_filtrada.objects.filter(principal__fonte= id_inspecao)
+        artefato_id = Inspecao.objects.filter(id= id_inspecao).first().id
         formsets = []
 
         for discrepancia in discrepancias:
-            filtrada, created = Discrepancia_filtrada.objects.get_or_create(principal=discrepancia)
-            artefato_id = discrepancia.fonte.artefato.id if discrepancia.fonte else None
             form = DiscrepanciaFiltradaInlineForm(
                 post_data, 
-                instance=filtrada, 
-                artefato_id=artefato_id,
+                instance = discrepancia, 
+                artefato_id = artefato_id,
                 prefix=f'discrepancia_{discrepancia.id}'
             )
-            formsets.append((discrepancia, form))
+            formsets.append([discrepancia, form])
 
         inspecao = Inspecao.objects.get(pk=self.kwargs['pk'])
         titulo_inspecao = inspecao.titulo
@@ -366,7 +367,8 @@ def exportar_dados(request, pk):
 
     style_cels = ParagraphStyle(
         'cels',
-        fontSize=11
+        fontSize=11,
+        leading=12
     )
 
     elements = [Paragraph(f'Título: {inspec.titulo}', style_header)]
@@ -377,18 +379,21 @@ def exportar_dados(request, pk):
     
     data = [['Localiza', 'Descrição', 'Autor', 'Tipo', 'Severidade']]
 
+    nomenclatura_geral = discrepancias[0].principal.fonte.artefato.nomeclatura_geral
+    nomenclatura_especifica = discrepancias[0].principal.fonte.artefato.nomeclatura_espcifica
+
     for discrepancia in discrepancias:
-        localizacao = discrepancia.principal.localizacao_geral
+        localizacao = nomenclatura_geral +' '+ discrepancia.principal.localizacao_geral +', '+ nomenclatura_especifica +' '+ discrepancia.principal.localizacao_especifica
         descricao = discrepancia.principal.descricao
         autor = discrepancia.principal.responsavel
         tipo = discrepancia.principal.tipo
         severidade = discrepancia.severidade
         data.append([
-            localizacao,
+            Paragraph(localizacao, style_cels),
             Paragraph(descricao, style_cels),
-            autor,
-            tipo,
-            severidade
+            Paragraph(str(autor), style_cels),
+            Paragraph(tipo, style_cels),
+            Paragraph(str(severidade), style_cels)
         ])
 
     table = LongTable(data, colWidths=[80, '*', 80, 80, 80])
