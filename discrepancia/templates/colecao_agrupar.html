@@ -1,0 +1,79 @@
+{% extends "template_main.html" %}
+{% load widget_tweaks %}
+
+{% block nome_pagina %}
+Coleção - Agrupar
+{% endblock %}
+
+{% block conteudo %}
+<div class="bg-secondary text-white border border-dark rounded text-center pt-1 mt-2 mb-1 mx-3">
+    <h3>
+        {{titulo_inspecao}} - Coleção
+    </h3>
+</div>
+<div class="d-flex justify-content-center">
+    <form method="post" class="d-flex flex-column border border-black rounded-bottom bg-light mx-2" style="width: 67%;">
+        {% csrf_token %}
+        <table class="text-center" style="height: 100%;">
+            <thead class="content-around px-4 bg-secondary">
+                <tr>
+                    <th scope="col">{{nomenclatura_geral}}</th>
+                    <th scope="col">{{nomenclatura_geral}}</th>
+                    <th scope="col">Descrição</th>
+                    <th scope="col">Tipo</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th colspan="5">
+                        <!-- {{ form }} -->
+                        {% render_field form.repetidas class="form-control h-100" %}
+                        <!-- <h3>Como isso?</h3> -->
+                    </th>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mt-auto container justify-content-around rounded-bottom" style="background-color: #F0F0F0;">
+            <div class="row mx-1 border-top border-dark"></div>
+            <div class="row py-2 text-center">
+                <div class="col-1 text-truncate">{{d_principal.localizacao_geral}}</div>
+                <div class="col-1 text-truncate">{{d_principal.localizacao_especifica}}</div>
+                <div class="col-6 text-truncate">{{d_principal.descricao}}</div>
+                <div class="col text-truncate">{{d_principal.tipo}}</div>
+                <div class="col p-0"><button type="submit" class="btn btn-primary m-0">Agrupar</button></div>
+            </div>
+        </div>
+    </form>
+
+    <div class="p-1 bg-black rounded "  style="width: 30%; height: 80vh;">
+        <div class="d-flex flex-column p-3 bg-light rounded" style="height: 100%;">
+            <div class="row mb-2 border-bottom border-black text-center pb-2">
+                <h4 class="">Discrepâncias Filtradas</h4>
+            </div>
+            <ul class="row mb-auto list-group list-group-flush text-justify">
+                {% for disc_filtrada in disc_filtradas %}
+                    <li class="list-group-item list-group-item-action"><a>{{disc_filtrada}}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.querySelectorAll('.row-checkbox').forEach(checkbox => {
+        console.log(checkbox);
+        checkbox.addEventListener('change', function() {
+            const row = this.closest('tr');
+            if (this.checked) {
+                row.classList.add('marcado');
+            } else {
+                row.classList.remove('marcado');
+            }
+        });
+    });
+</script>
+{% endblock %}

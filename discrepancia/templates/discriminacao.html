@@ -1,0 +1,60 @@
+{% extends "template_main.html" %}
+{%load static%}
+
+{% block nome_pagina %}
+Discriminação
+{% endblock %}
+
+{% block conteudo %}
+<form method="post">
+    {% csrf_token %}
+    <div class="container-fluid p-1 px-3">
+        <div class="row bg-secondary text-white border border-dark rounded text-center pt-1">
+            <h3>
+                {{titulo_inspecao}} - Discriminação
+            </h3>
+        </div>
+        <div class="row p-1 m-1">
+            <table class="table table-sm table-hover table-striped text-center">
+                <thead class="table table-dark px-4 content-around">
+                    <tr>
+                        <th scope="col">Descrição</th>
+                        <!-- <th scope="col">Tipo</th> -->
+                        <th scope="col">Severidade</th>
+                        <!-- <th scope="col">Discr. Associadas</th> -->
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for discrepancia, form in formsets %}
+                    <tr>
+                        <td>{{discrepancia}}</td>
+                        <td>
+                            {{ form.severidade.label_tag }}
+                            {{ form.severidade }}
+                        </td>
+                        <!-- <td>{{discrepancia.severidade}}</td>
+                        <td>{{discrepancia.associadas}}</td> -->
+                        <td></td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <th colspan="5">
+                            <h3>Nada para ver aqui ainda.</h3>
+                        </th>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="fixed-bottom border-top border-black d-flex align-items-center justify-content-around mx-2 p-2" style="height: 10vh;">
+        <form method="POST"> 
+            {% csrf_token %}
+            <button type="submit" name="cancelar_inspecao" class="btn btn-danger">Cancelar Inspeção</button>
+        </form>
+        <button type="submit" name="salvar_alteracoes" class="btn btn-primary">Salvar Alterações</button>
+        <button type="submit" name="concluir_inspecao" class="btn btn-success">Concluir Inspeção</button>
+    </div>
+</form>
+{% endblock %}

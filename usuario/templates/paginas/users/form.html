@@ -22,7 +22,7 @@
 </div>
 {% endblock %}
 
-{% block menus %}
+{% block conteudo %}
 <section class="cadastrar">
 
     <form class="card-cadastrar" method="post">
@@ -33,26 +33,16 @@
 
         {% csrf_token %}
 
-        <!-- {{ form }} -->
+        {% comment %} <!-- {{ form }} -->
         <div class="input-cadastrar">
             <div class="card-content-cadastro">
                 <div class="card-cadastro-input">
                     {{ form.first_name.label_tag }}
                     {{ form.first_name }}
                 </div>
-
-                <div class="card-cadastro-input">
-                    {{ form.last_name.label_tag }}
-                    {{ form.last_name }}
-                </div>
-            </div>
+            </div> {% endcomment %}
 
             <div class="card-content-cadastro">
-                <div class="card-cadastro-input">
-                    {{ form.username.label_tag }}
-                    {{ form.username }}
-                </div>
-
                 <div class="card-cadastro-input">
                     {{ form.username.label_tag }}
                     {{ form.username }}
@@ -83,33 +73,6 @@
                 </div>
                 {% endif %}
             </div>
-
-            <!--<div class="card-content">
-                <div class="card-cadastro-area">
-                    {{ form.email.errors }}
-                    {{ form.email.label_tag }}
-                    {{ form.email }}
-                </div>
-            </div>
-            
-            <div class="card-content">
-                <div class="card-cadastro-area">
-                    {{ form.password1.errors }}
-                    {{ form.password1.label_tag }}
-                    {{ form.password1 }}
-                    <div style="width: 300px;">
-                        {{ form.password1.help_text }}
-                    </div>
-                </div>
-            </div>
-    
-            <div class="card-content">
-                <div class="card-cadastro-area">
-                    {{ form.password2.errors }}
-                    {{ form.password2.label_tag }}
-                    {{ form.password2 }}
-                </div>
-            </div> -->
 
             {{ form.first_name.errors }}
             {{ form.last_name.errors }}

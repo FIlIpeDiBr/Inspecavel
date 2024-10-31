@@ -1,0 +1,48 @@
+{% extends "template_main.html" %}
+{%load static%}
+
+{% block conteudo %}
+<div class="pt-3 px-4">
+
+    <table class="table table-sm table-hover table-striped text-center">
+        <thead class="table table-dark px-4 content-around">
+            <tr><td colspan=4>Moderador</td></tr>
+            <tr class="bg-primary">
+                <th class="col-3" scope="col">Título</th>
+                <th class="col-3" scope="col">Artefato</th>
+                <th class="col-3" scope="col">Criação</th>
+                <th class="col-3" scope="col"><a class="btn btn-dark">
+                    Estágio
+                    {% comment %} <img src="{% static 'img/dropdown-branco.png' %}" width="20" height="20"> {% endcomment %}
+                </a></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% block lista_moderador%}
+
+            {% endblock %}
+        </tbody>
+    </table>
+
+    <table class="table table-sm table-hover table-striped text-center">
+        <thead class="table table-dark px-4">
+            <tr><td colspan=4>Inspetor</td></tr>
+            <tr>
+                <th class="col-3" scope="col">Título</th>
+                <th class="col-3" scope="col">Artefato</th>
+                <th class="col-3" scope="col">{% block criacao %}Criação{% endblock %}</th>
+                <th class="col-3" scope="col"><a class="btn btn-dark">
+                    Estágio
+                    {% comment %} <img src="{% static 'img/dropdown-branco.png' %}" width="20" height="20"> {% endcomment %}
+                </a></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% block lista_inspetor%}
+
+            {% endblock %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

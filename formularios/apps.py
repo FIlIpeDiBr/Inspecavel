@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class InspetorConfig(AppConfig):
+class FormulariosConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'inspetor'
+    name = 'formularios'

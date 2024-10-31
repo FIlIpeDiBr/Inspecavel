@@ -3,24 +3,23 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseForbidden
 
 from .forms import UserChangeForm, UserCreationForm
 from .models import User
 
 
 class IndexUserView(LoginRequiredMixin, TemplateView):
-    login_url = reverse_lazy('users-login')
+    login_url = reverse_lazy('em_aberto')
     template_name = 'paginas/users/index.html'
 
 
-class CadastrarUserView(LoginRequiredMixin, CreateView):
-    login_url = reverse_lazy('users-login')
+class CadastrarUserView(CreateView):
     template_name = 'paginas/users/form.html'
     form_class = UserCreationForm
-    success_url = reverse_lazy('users-listar')
+    success_url = reverse_lazy('em_aberto')
 
     def get_context_data(self, *args, **kwargs):
-        login_url = reverse_lazy('users-login')
         context = super().get_context_data(*args, **kwargs)
         context['titulo_pagina'] = 'Cadastrar Usuário'
         context['tipo_operacao'] = 'cadastro'
@@ -29,11 +28,17 @@ class CadastrarUserView(LoginRequiredMixin, CreateView):
 
 
 class AlterarUserView(LoginRequiredMixin, UpdateView):
-    login_url = reverse_lazy('users-login')
+    login_url = reverse_lazy('em_aberto')
     template_name = 'paginas/users/form.html'
     form_class = UserChangeForm
     model = User
     success_url = reverse_lazy('users-listar')
+
+    def dispatch(self, request, *args, **kwargs):
+        user = self.get_object()
+        if user != request.user:
+            return HttpResponseForbidden("<h1>Você não tem permissão para editar os dados deste usuário. Saifora!!!</h1>")
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, *args, **kwargs):
         login_url = reverse_lazy('users-login')

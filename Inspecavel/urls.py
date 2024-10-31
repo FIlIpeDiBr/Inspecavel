@@ -1,23 +1,22 @@
-"""
-URL configuration for Inspecavel project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path, include
 
+from discrepancia.views import deteccao_inspetor, deteccao_monitor, colecao, colecao_agrupar, discriminacao, exportar_dados
+from artefato.views import novo_artefato
+
 urlpatterns = [
+    path('', include('inspecao.urls')),
+
+    path('deteccao/inspetor/<int:pk>', deteccao_inspetor.as_view(), name='deteccao_inspetor'),
+    path('deteccao/monitor/<int:pk>', deteccao_monitor.as_view(), name='deteccao_monitor'),
+    path('colecao/<int:pk>', colecao.as_view(), name='colecao'),
+    path('colecao/agrupar/<int:pk>/<int:disc>', colecao_agrupar.as_view(), name='colecao_agrupar'),
+    path('discriminacao/<int:pk>', discriminacao.as_view(), name='discriminacao'),
+    path('exportar/<int:pk>', exportar_dados, name="exportar"),
+
+    path('novo/artefato', novo_artefato.as_view(), name="novo_artefato"),
+
+
     path('admin/', admin.site.urls),
     path('usuario/', include('usuario.urls')),
 ]
