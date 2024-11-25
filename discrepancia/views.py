@@ -1,8 +1,7 @@
 import io
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404, render, redirect
-from django.views.generic import View, TemplateView, ListView, CreateView, ListView, DetailView
-from django.views.generic.edit import FormView
+from django.views.generic import View, ListView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
@@ -24,7 +23,6 @@ from inspecao.models import Inspecao
 from discrepancia_filtrada.models import Discrepancia_filtrada
 from artefato.models import Artefato
 from discrepancia.forms import DiscrepanciaFiltradaInlineForm
-
 
 class deteccao_inspetor(LoginRequiredMixin, CreateView):
     login_url = reverse_lazy('users-login')
@@ -109,7 +107,7 @@ class deteccao_monitor(LoginRequiredMixin, ListView):
         elif 'cancelar_inspecao' in request.POST:
             return self.cancelar_inspecao(request)
         
-        return redirect('concluidas')
+        return redirect('em_aberto')
 
     def concluir_deteccao(self, request):
         inspecao_id = self.kwargs['pk']
@@ -222,8 +220,9 @@ class colecao_agrupar(LoginRequiredMixin, CreateView):
         return form
 
     def form_valid(self, form):
-        id = get_object_or_404(Discrepancia, pk=self.kwargs.get('pk')).pk
+        id = get_object_or_404(Inspecao, pk=self.kwargs.get('pk')).pk
         discrepancia_principal = get_object_or_404(Discrepancia, pk=self.kwargs.get('disc'))
+        print(discrepancia_principal)
         repetidas = form.cleaned_data.get('repetidas')
 
         
@@ -266,7 +265,6 @@ class colecao_agrupar(LoginRequiredMixin, CreateView):
 class discriminacao(LoginRequiredMixin, View):
     login_url = reverse_lazy('users-login')
     template_name = 'discriminacao.html'
-    # success_url = reverse_lazy('colecao')  # Redirecione para onde você desejar após o sucesso
 
     def dispatch(self, request, *args, **kwargs):
         inspecao = Inspecao.objects.get(pk=self.kwargs['pk'])
@@ -285,20 +283,24 @@ class discriminacao(LoginRequiredMixin, View):
             return self.concluir_inspecao(request)
         elif 'cancelar_inspecao' in request.POST:
             return self.cancelar_inspecao(request)
-        else:
+        elif 'salvar_alteracoes' in request.POST:
+            messages.info(request, "Status da inspeção salvo com sucesso!")
             return self.salvar_alteracoes(request)
+        else:
+            return self.render_formsets(request)
+
 
     def salvar_alteracoes(self, request):
         id_inspecao = self.kwargs['pk']
         discrepancias = Discrepancia_filtrada.objects.filter(principal__fonte= id_inspecao)
-        artefato_id = Inspecao.objects.filter(id= id_inspecao).first().id
+        id_artefato = Inspecao.objects.get(pk=self.kwargs['pk']).artefato.id
         all_forms_valid = True
 
         for discrepancia in discrepancias:
             form = DiscrepanciaFiltradaInlineForm(
                 request.POST, 
                 instance = discrepancia,
-                artefato_id = artefato_id,
+                artefato_id = id_artefato,
                 prefix=f'discrepancia_{discrepancia.id}'
             )
             if form.is_valid():
@@ -332,14 +334,14 @@ class discriminacao(LoginRequiredMixin, View):
     def render_formsets(self, request, post_data=None):
         id_inspecao = self.kwargs['pk']
         discrepancias = Discrepancia_filtrada.objects.filter(principal__fonte= id_inspecao)
-        artefato_id = Inspecao.objects.filter(id= id_inspecao).first().id
+        id_artefato = Inspecao.objects.get(pk=self.kwargs['pk']).artefato.id
         formsets = []
 
         for discrepancia in discrepancias:
             form = DiscrepanciaFiltradaInlineForm(
                 post_data, 
                 instance = discrepancia, 
-                artefato_id = artefato_id,
+                artefato_id = id_artefato,
                 prefix=f'discrepancia_{discrepancia.id}'
             )
             formsets.append([discrepancia, form])
@@ -375,9 +377,14 @@ def exportar_dados(request, pk):
     
     elements.append(Spacer(1, 20))
 
-    discrepancias = Discrepancia_filtrada.objects.all()
+    discrepancias = Discrepancia_filtrada.objects.filter(principal__fonte=inspec)
+
+    if(not discrepancias):
+        messages.error(request, "Não há nenhuma discrepância filtrada associada a esta inspeção."+
+                                " Esta inspeção nunca chegou à etapa de discriminação.")
+        return redirect('concluidas')
     
-    data = [['Localiza', 'Descrição', 'Autor', 'Tipo', 'Severidade']]
+    data = [['Localização', 'Descrição', 'Autor', 'Tipo', 'Severidade']]
 
     nomenclatura_geral = discrepancias[0].principal.fonte.artefato.nomeclatura_geral
     nomenclatura_especifica = discrepancias[0].principal.fonte.artefato.nomeclatura_espcifica
@@ -413,4 +420,6 @@ def exportar_dados(request, pk):
     doc.build(elements)
     buf.seek(0)
 
-    return FileResponse(buf, as_attachment=True, filename='relatorio.pdf')
+    name = str(discrepancia.principal.fonte) + " - " + str(discrepancia.principal.fonte.artefato) + ".pdf"
+
+    return FileResponse(buf, as_attachment=True, filename=name)

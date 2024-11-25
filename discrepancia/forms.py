@@ -49,4 +49,4 @@ class DiscrepanciaFiltradaInlineForm(forms.ModelForm):
                 severidades = artefato.lista_severidade.split('; ')
                 self.fields['severidade'].widget = forms.Select(choices=[(s, s) for s in severidades])
             except Artefato.DoesNotExist:
-                self.fields['severidade'].widget = forms.Select(choices=[])
+                self.fields['severidade'].widget = forms.Select(choices=[("vazio", artefato_id)])

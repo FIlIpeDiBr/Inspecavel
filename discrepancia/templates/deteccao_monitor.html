@@ -50,9 +50,10 @@ Detecção - Monitor
             <span>{{inspecao.data_limite}}</span>
         </div>
         <div class="flex-row mt-auto d-flex justify-content-around py-3">
-            <form method="POST"> 
+            <form method="POST" id="formCancelar"> 
                 {% csrf_token %}
-                <button type="submit" name="cancelar_inspecao" class="btn btn-danger">Cancelar Inspeção</button>
+                <button onclick=cancelarInspecao(event) class="btn btn-danger">Cancelar Inspeção</button>
+                <input type="hidden" name="cancelar_inspecao" value=true>
             </form>
             <form method="POST"> 
                 {% csrf_token %}
@@ -62,4 +63,16 @@ Detecção - Monitor
     </div>
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function cancelarInspecao(event){
+        event.preventDefault();
+        
+        if(confirm("Você realmente deseja cancelar a inspeção? \nESTA AÇÃO É IRREVERSÍVEL")){
+            event.target.closest('form').submit();
+        }
+    }
+</script>
 {% endblock %}

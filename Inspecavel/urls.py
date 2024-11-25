@@ -16,7 +16,6 @@ urlpatterns = [
 
     path('novo/artefato', novo_artefato.as_view(), name="novo_artefato"),
 
-
     path('admin/', admin.site.urls),
     path('usuario/', include('usuario.urls')),
 ]

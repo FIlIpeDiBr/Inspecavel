@@ -33,14 +33,12 @@ Discriminação
                             {{ form.severidade.label_tag }}
                             {{ form.severidade }}
                         </td>
-                        <!-- <td>{{discrepancia.severidade}}</td>
-                        <td>{{discrepancia.associadas}}</td> -->
                         <td></td>
                     </tr>
                     {% empty %}
                     <tr>
                         <th colspan="5">
-                            <h3>Nada para ver aqui ainda.</h3>
+                            <h3>Você não deveria estar aqui.</h3>
                         </th>
                     </tr>
                     {% endfor %}
@@ -49,12 +47,34 @@ Discriminação
         </div>
     </div>
     <div class="fixed-bottom border-top border-black d-flex align-items-center justify-content-around mx-2 p-2" style="height: 10vh;">
-        <form method="POST"> 
-            {% csrf_token %}
-            <button type="submit" name="cancelar_inspecao" class="btn btn-danger">Cancelar Inspeção</button>
-        </form>
+        <button onclick=cancelarInspecao(event) class="btn btn-danger">Cancelar Inspeção</button>
+
         <button type="submit" name="salvar_alteracoes" class="btn btn-primary">Salvar Alterações</button>
-        <button type="submit" name="concluir_inspecao" class="btn btn-success">Concluir Inspeção</button>
+
+        <button onclick=concluirInspecao(event) id="concluir_inspecao" class="btn btn-success">Concluir Inspeção</button>
+        <input type="hidden" id="acao" name="">
     </div>
 </form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function cancelarInspecao(event){
+        event.preventDefault();
+        
+        if(confirm("Você realmente deseja cancelar a inspeção? \nESTA AÇÃO É IRREVERSÍVEL")){
+            document.getElementById("acao").name = "cancelar_inspecao";
+            event.target.closest('form').submit();
+        }
+    }
+
+    function concluirInspecao(event){
+        event.preventDefault();
+
+        if(confirm("Você realmente deseja concluir a inspeção? \nESTA AÇÃO É IRREVERSÍVEL")){
+            document.getElementById("acao").name = "concluir_inspecao";
+            event.target.closest("form").submit();
+        }
+    }
+</script>
 {% endblock %}

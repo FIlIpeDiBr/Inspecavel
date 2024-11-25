@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
 </head>
 
+
 <body>
   {% if messages %}
     <script type="text/javascript">
@@ -53,9 +54,9 @@
             {% if user.is_authenticated %}
             <p class="text-white my-0">Olá, {{ user.username }}</p>
             <form method="POST" action="{% url 'users-logout'%}">
-              <button method="submit" class="btn btn-dark ronded">
+              <button onclick=logout(event) class="btn btn-dark ronded">
                 {% csrf_token %}
-                <img src="{% static 'img/logout-branco.png' %}" alt="Trulli" width="" height="30"> 
+                <img src="{% static 'img/logout-branco.png' %}" alt="Trulli" width="" height="30">
               </button>
             </form>
               {% endif %}
@@ -68,10 +69,20 @@
 
     {% block rodape %}
     {% endblock %}
-
+    
     <script src="{% static 'js/popper.min.js' %}"></script>
     <script src="{% static 'js/jquery-3.2.1.slim.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+    <script>
+      function logout(event){
+          event.preventDefault();
+
+          if(confirm("Você realmente deseja realizar o logout?")){
+              event.target.closest('form').submit();
+          }
+      }
+    </script>
     
     {% block scripts %}
     {% endblock %}

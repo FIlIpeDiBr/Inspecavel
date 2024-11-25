@@ -67,10 +67,23 @@ Coleção
             </ul>
             <form method="POST"> 
                 {% csrf_token %}
-                <button type="submit" name="cancelar_inspecao" class="btn btn-danger">Cancelar Inspeção</button>
+                <button onclick=cancelarInspecao(event) name="cancelar_inspecao" class="btn btn-danger">Cancelar Inspeção</button>
+                <input type="hidden" name="cancelar_inspecao" value=true>
             </form>
         </div>
     </div>
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function cancelarInspecao(event){
+        event.preventDefault();
+        
+        if(confirm("Você realmente deseja cancelar a inspeção? \nESTA AÇÃO É IRREVERSÍVEL")){
+            event.target.closest('form').submit();
+        }
+    }
+</script>
 {% endblock %}
