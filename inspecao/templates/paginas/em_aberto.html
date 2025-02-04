@@ -9,7 +9,7 @@
         <tr>
             <th style="max-width: 4vw;" scope="row">{{inspecao.titulo}}</th>
             <td style="max-width: 4vw;">{{inspecao.artefato}}</td>
-            <td style="max-width: 3vw;">{{inspecao.data_limite}}</td>
+            <td style="max-width: 3vw;">{{inspecao.created_at}}</td>
             <td style="max-width: 3vw;">
                 {% if inspecao.colecao_finalizada %}
                     <a href="{% url "discriminacao" inspecao.pk %}" class="btn btn-outline-dark py-0 px-1">
@@ -49,7 +49,7 @@
     {% empty %}
         <tr>
             <th colspan="4">
-                <h1>Você não está adicionado a nenhuma inspeção atualmente.</h1>
+                <h1>Você não está atribuido a nenhuma inspeção atualmente</h1>
             </th>
         </tr>
     {% endfor %}

@@ -52,7 +52,8 @@
             </ul>
           </div>
             {% if user.is_authenticated %}
-            <p class="text-white my-0">Olá, {{ user.username }}</p>
+            <p class="text-white my-0">Olá, </p>
+            <a class="btn btn-secondary text-white py-0 px-1 m-0" href="{% url 'users-alterar' user.pk %}">{{ user.username }}</a>
             <form method="POST" action="{% url 'users-logout'%}">
               <button onclick=logout(event) class="btn btn-dark ronded">
                 {% csrf_token %}

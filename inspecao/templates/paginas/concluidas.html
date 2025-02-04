@@ -14,12 +14,12 @@
                 {% if inspecao.inspecao_cancelada %}
                     <a href="{% url 'exportar' inspecao.pk %}" class="btn btn-outline-dark py-0 px-1">
                         Cancelada em:<br>
-                        {{inspecao.finished_at}}
+                        {{inspecao.inspecao_finalizada_at}}
                     </a>
                 {% else %}
                     <a href="{% url 'exportar' inspecao.pk %}" class="btn btn-outline-dark py-0 px-1">
                         Concluída em:<br>
-                        {{inspecao.finished_at}}
+                        {{inspecao.inspecao_finalizada_at}}
                     </a>
                 {% endif %}
             </td>
@@ -41,15 +41,15 @@
             <td style="max-width: 3vw;">{{inspecao.created_at}}</td>
             <td style="max-width: 3vw;">
                 {% if inspecao.inspecao_cancelada %}
-                    <a href="{% url 'exportar' inspecao.pk %}" class="btn btn-outline-dark py-0 px-1">
+                    <button disabled class="btn btn-outline-dark py-0 px-1">
                         Cancelada em:<br>
-                        {{inspecao.finished_at}}
-                    </a>
+                        {{inspecao.inspecao_finalizada_at}}
+                    </button>
                 {% else %}
-                    <a href="{% url 'exportar' inspecao.pk %}" class="btn btn-outline-dark py-0 px-1">
+                    <button disabled class="btn btn-outline-dark py-0 px-1">
                         Concluída em:<br>
-                        {{inspecao.finished_at}}
-                    </a>
+                        {{inspecao.inspecao_finalizada_at}}
+                    </button>
                 {% endif %}
         </tr>
     {% empty %}

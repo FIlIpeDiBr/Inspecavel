@@ -1,1 +1,73 @@
-site_name: My Docs
+site_name: Inspecavel Docs
+site_description: Site de documentação da ferramenta Inspecavel
+site_author: Filipe Dias Brandão
+theme:
+  favicon: /assets/imagens/logo-inspecavel_docs-preta.png
+  logo: /assets/imagens/logo-inspecavel_docs-preta.png
+
+  name: material
+  language: pt-BR
+  icon:
+    repo: fontawesome/brands/github
+    view: material/eye
+  features:
+    - content.action.edit
+    - content.code.copy
+  palette:
+    # Palette toggle for automatic mode
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-7
+        name: Trocar para modo claro
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default 
+      toggle:
+        icon: material/brightness-2
+        name: Trocar para modo escuro
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-auto
+        name: trocar para preferência do sistema
+
+repo_url: https://github.com/FIlIpeDiBr/Inspecavel.git
+repo_name: FIlIpeDiBr/Inspecavel
+
+edit_uri: tree/master/Inspecavel_docs/docs/
+
+plugins:
+  - git-authors
+  - search
+  - tags
+  - blog:
+      enabled: true
+      blog_dir: guia_de_uso
+      blog_toc: false
+      archive: false
+      categories: false
+      categories_allowed:
+        - Artefato
+        - Inspeção
+
+markdown_extensions:
+  - pymdownx.highlight:
+      use_pygments: true
+      linenums: true
+      anchor_linenums: true
+      guess_lang: false
+nav:
+  - index.md
+  - doc_tecnica.md
+  - Testes:
+    - testes/index.md
+  - instalacao.md
+  - Guia de Uso:
+    - guia_de_uso/index.md
+    - guia_de_uso/inspetor_tutorial.md
+    - guia_de_uso/artefato_tutorial.md
+    - guia_de_uso/criar_inspecao.md
+    - guia_de_uso/deteccao_tutorial.md
+    - guia_de_uso/colecao_tutorial.md
+    - guia_de_uso/discriminacao_tutorial.md

@@ -19,12 +19,14 @@ Detecção - Inspetor
             {% csrf_token %}
             <label for="loc_geral" class="">Localização:</label><br>
             <span class="btn">{{nomenclatura_geral}}:</span>
-            {{ form.localizacao_geral|add_class:'btn btn-light border-dark col-1' }}
+            {{ form.localizacao_geral|add_class:'btn btn-light border-dark col-2' }}
             <span class="btn">{{nomenclatura_especifica}}:</span>
-            {{ form.localizacao_especifica|add_class:'btn btn-light border-dark col-1' }}
+            {{ form.localizacao_especifica|add_class:'btn btn-light border-dark col-2' }}
             
-            <div class="form-gorup">
-                {{ form.descricao.label_tag }}
+            <br>
+
+            {{ form.descricao.label_tag }}
+            <div class="input-group">
                 {{ form.descricao|add_class:'form-control border border-dark' }}
             </div>
 

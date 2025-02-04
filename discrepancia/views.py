@@ -113,7 +113,7 @@ class deteccao_monitor(LoginRequiredMixin, ListView):
         inspecao_id = self.kwargs['pk']
         inspecao = get_object_or_404(Inspecao, id=inspecao_id)
         inspecao.deteccao_finalizada = True
-        inspecao.finished_at = now()
+        inspecao.deteccao_finalizada_at = now()
         inspecao.save()
         return redirect('colecao', pk=inspecao_id)
     
@@ -122,7 +122,7 @@ class deteccao_monitor(LoginRequiredMixin, ListView):
         inspecao = get_object_or_404(Inspecao, id=inspecao_id)
         inspecao.inspecao_finalizada = True
         inspecao.inspecao_cancelada = True
-        inspecao.finished_at = now()
+        inspecao.inspecao_finalizada_at = now()
         inspecao.save()
         return redirect('concluidas')
     
@@ -181,7 +181,7 @@ class colecao(LoginRequiredMixin, ListView):
         if not inspecao.inspecao_finalizada:
             inspecao.inspecao_finalizada = True
         inspecao.inspecao_cancelada = True
-        inspecao.finished_at = now()
+        inspecao.inspecao_finalizada_at = now()
         inspecao.save()
         return redirect('concluidas')
 
@@ -201,6 +201,13 @@ class colecao_agrupar(LoginRequiredMixin, CreateView):
             return redirect(request.META.get('HTTP_REFERER', 'concluidas'))
         
         return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+            context = super().get_context_data(**kwargs)
+
+            context['titulo_inspecao'] = Inspecao.objects.filter(pk=self.kwargs['pk']).first().titulo
+
+            return context
 
     def get_success_url(self):
         return reverse_lazy('colecao', kwargs={'insp': self.kwargs.get('insp')})
@@ -254,7 +261,7 @@ class colecao_agrupar(LoginRequiredMixin, CreateView):
         inspecao_id = self.kwargs['pk']
         inspecao = get_object_or_404(Inspecao, id=inspecao_id)
         inspecao.colecao_finalizada = True
-        inspecao.finished_at = now()
+        inspecao.inspecao_finalizada_at = now()
         inspecao.save()
         return redirect('discriminacao', pk=inspecao_id)
 
@@ -317,9 +324,9 @@ class discriminacao(LoginRequiredMixin, View):
         self.salvar_alteracoes(request)
         inspecao = Inspecao.objects.get(pk=self.kwargs['pk'])
         inspecao.inspecao_finalizada = True
-        inspecao.finished_at = now()
+        inspecao.inspecao_finalizada_at = now()
         inspecao.save()
-        return redirect('concluidas')  # Redirecione para a URL desejada após concluir a inspeção
+        return redirect('concluidas')
     
     def cancelar_inspecao(self, request):
         inspecao_id = self.kwargs['pk']
@@ -327,7 +334,7 @@ class discriminacao(LoginRequiredMixin, View):
         if not inspecao.inspecao_finalizada:
             inspecao.inspecao_finalizada = True
         inspecao.inspecao_cancelada = True
-        inspecao.finished_at = now()
+        inspecao.inspecao_finalizada_at = now()
         inspecao.save()
         return redirect('concluidas')
 
@@ -351,7 +358,7 @@ class discriminacao(LoginRequiredMixin, View):
 
         return render(request, self.template_name, {'formsets': formsets, 'titulo_inspecao': titulo_inspecao})
 
-
+# Isso nem deveria estar aqui, muda para o arquivo: inspecao/views.py
 @login_required
 def exportar_dados(request, pk):
     inspec = Inspecao.objects.get(pk=pk)
