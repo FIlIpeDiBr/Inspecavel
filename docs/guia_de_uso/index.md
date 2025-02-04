@@ -6,9 +6,7 @@ Este é um guia prático de como começar na ferramenta Inspecável.
 
 ## Acessando a Ferramenta
 
-Embora seja possível utilizar a ferramenta pública através do site <https://www.example.com>, nós recomendamos a instalação local para uma maior liberdade de configuração e para que a experiência e variáveis sejam contidas, facilitando o aprendizado.
-
-> Você pode encontrar o passo a passo de como fazer isso no [Guia de Instalação](../instalacao.md).
+Infelizmente a ferramenta ainda não foi disponibilizada em um domínio público, por isso, para acessá-la você deve realizar a instalação. Você pode encontrar o passo a passo de como fazer isso no [Guia de Instalação](../instalacao.md).
 
 Uma vez na plataforma você deve realizar o cadastro e login para ter acesso às funcionalidades. O processo de cadastro é simples e não requer confirmação de email, basta informar os campos requeridos e se certificar de recordar as informações de login.
 
